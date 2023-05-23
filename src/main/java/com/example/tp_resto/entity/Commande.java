@@ -11,7 +11,7 @@ public class Commande {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private String numCommande;
-    private boolean payer;
+    private String statut;
     private double prix;
     private String typePaiment;
 
@@ -20,9 +20,10 @@ public class Commande {
 
     }
 
-    public Commande(String numCommande, boolean payer, double prix, String typePaiment) {
+    public Commande(String numCommande, String statut, double prix, String typePaiment) {
+
         this.numCommande = numCommande;
-        this.payer = payer;
+        this.statut = statut;
         this.prix = prix;
         this.typePaiment = typePaiment;
     }
@@ -43,13 +44,9 @@ public class Commande {
         this.numCommande = numCommande;
     }
 
-    public boolean isPayer() {
-        return payer;
-    }
+    public String getStatut() { return statut; }
 
-    public void setPayer(boolean payer) {
-        this.payer = payer;
-    }
+    public void setStatut(String statut) { this.statut = statut; }
 
     public double getPrix() {
         return prix;
@@ -72,7 +69,7 @@ public class Commande {
         return "Commande{" +
                 "id=" + id +
                 ", numCommande='" + numCommande + '\'' +
-                ", payer=" + payer +
+                ", statut=" + statut +
                 ", prix=" + prix +
                 ", typePaiment='" + typePaiment + '\'' +
                 '}';

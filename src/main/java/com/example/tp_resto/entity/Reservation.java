@@ -14,10 +14,10 @@ public class Reservation {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private String nomReservation;
-    private Date date;
+    private Date dateResa;
     private boolean statut;
     private int table;
-    private int personne;
+    private int nbPersonne;
 
 
     public Reservation() {
@@ -25,10 +25,10 @@ public class Reservation {
 
     public Reservation(String nomReservation, Date date, boolean statut, int table, int personne) {
         this.nomReservation = nomReservation;
-        this.date = date;
+        this.dateResa = date;
         this.statut = statut;
         this.table = table;
-        this.personne = personne;
+        this.nbPersonne = personne;
     }
 
     public Integer getId() {
@@ -47,12 +47,12 @@ public class Reservation {
         this.nomReservation = nomReservation;
     }
 
-    public Date getDate() {
-        return date;
+    public Date getDateResa() {
+        return dateResa;
     }
 
-    public void setDate(Date date) {
-        this.date = date;
+    public void setDateResa(Date dateResa) {
+        this.dateResa = dateResa;
     }
 
     public boolean isStatut() {
@@ -71,11 +71,11 @@ public class Reservation {
         this.table = table;
     }
 
-    public int getPersonne() {
-        return personne;
+    public int getNbPersonne() {
+        return nbPersonne;
     }
 
-    public void setPersonne(int personne) {
-        this.personne = personne;
+    public void setNbPersonne(int personne) {
+        this.nbPersonne = personne;
     }
 }
