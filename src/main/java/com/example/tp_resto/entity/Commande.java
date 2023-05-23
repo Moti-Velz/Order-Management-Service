@@ -16,6 +16,8 @@ public class Commande {
     private String typePaiment;
 
     public Commande() {
+        //ceci est un commentaire
+
     }
 
     public Commande(String numCommande, boolean payer, double prix, String typePaiment) {
