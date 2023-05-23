@@ -15,7 +15,7 @@ public class Reservation {
     private Integer id;
     private String nomReservation;
     private Date dateResa;
-    private boolean statut;
+    private String statut;
     private int table;
     private int nbPersonne;
 
@@ -23,7 +23,7 @@ public class Reservation {
     public Reservation() {
     }
 
-    public Reservation(String nomReservation, Date date, boolean statut, int table, int personne) {
+    public Reservation(String nomReservation, Date date, String statut, int table, int personne) {
         this.nomReservation = nomReservation;
         this.dateResa = date;
         this.statut = statut;
@@ -55,11 +55,11 @@ public class Reservation {
         this.dateResa = dateResa;
     }
 
-    public boolean isStatut() {
+    public String getStatut() {
         return statut;
     }
 
-    public void setStatut(boolean statut) {
+    public void setStatut(String statut) {
         this.statut = statut;
     }
 
