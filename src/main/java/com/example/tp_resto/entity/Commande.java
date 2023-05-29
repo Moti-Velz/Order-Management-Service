@@ -5,27 +5,25 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
+import java.sql.Date;
+
 @Entity
 public class Commande {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    private String numCommande;
-    private String statut;
-    private double prix;
-    private String typePaiment;
+    private int tableId;
+    private String status;
+    private Date orderTime;
 
-    public Commande() {
-        //ceci est un commentaire
+    public Commande() {}
 
-    }
-
-    public Commande(String numCommande, String statut, double prix, String typePaiment) {
-
-        this.numCommande = numCommande;
-        this.statut = statut;
-        this.prix = prix;
-        this.typePaiment = typePaiment;
+    public Commande(Integer id, int tableId, String status, Date orderTime) {
+        this.id = id;
+        this.tableId = tableId;
+        this.status = status;
+        this.orderTime = orderTime;
     }
 
     public Integer getId() {
@@ -36,42 +34,37 @@ public class Commande {
         this.id = id;
     }
 
-    public String getNumCommande() {
-        return numCommande;
+    public int getTableId() {
+        return tableId;
     }
 
-    public void setNumCommande(String numCommande) {
-        this.numCommande = numCommande;
+    public void setTableId(int tableId) {
+        this.tableId = tableId;
     }
 
-    public String getStatut() { return statut; }
-
-    public void setStatut(String statut) { this.statut = statut; }
-
-    public double getPrix() {
-        return prix;
+    public String getStatus() {
+        return status;
     }
 
-    public void setPrix(double prix) {
-        this.prix = prix;
+    public void setStatus(String status) {
+        this.status = status;
     }
 
-    public String getTypePaiment() {
-        return typePaiment;
+    public Date getOrderTime() {
+        return orderTime;
     }
 
-    public void setTypePaiment(String typePaiment) {
-        this.typePaiment = typePaiment;
+    public void setOrderTime(Date orderTime) {
+        this.orderTime = orderTime;
     }
 
     @Override
     public String toString() {
         return "Commande{" +
                 "id=" + id +
-                ", numCommande='" + numCommande + '\'' +
-                ", statut=" + statut +
-                ", prix=" + prix +
-                ", typePaiment='" + typePaiment + '\'' +
+                ", tableId=" + tableId +
+                ", status='" + status + '\'' +
+                ", orderTime=" + orderTime +
                 '}';
     }
 }
