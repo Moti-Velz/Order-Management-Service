@@ -53,4 +53,6 @@ public class Table {
                 ", seats=" + seats +
                 '}';
     }
+
+
 }
