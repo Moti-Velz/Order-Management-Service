@@ -9,12 +9,10 @@ public class Table {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-    private int restaurantId;
     private int seats;
 
     public Table(int id, int restaurantId, int seats) {
         this.id = id;
-        this.restaurantId = restaurantId;
         this.seats = seats;
     }
 
@@ -29,14 +27,6 @@ public class Table {
         this.id = id;
     }
 
-    public int getRestaurantId() {
-        return restaurantId;
-    }
-
-    public void setRestaurantId(int restaurantId) {
-        this.restaurantId = restaurantId;
-    }
-
     public int getSeats() {
         return seats;
     }
@@ -49,7 +39,6 @@ public class Table {
     public String toString() {
         return "Table{" +
                 "id=" + id +
-                ", restaurantId=" + restaurantId +
                 ", seats=" + seats +
                 '}';
     }

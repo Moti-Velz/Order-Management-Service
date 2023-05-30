@@ -1,15 +1,17 @@
 package com.example.tp_resto.entity;
 
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 public class CommandeItem {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+
+    @ManyToOne
     private int orderId;
+
+    @OneToOne
     private int menuItemId;
     private int quantity;
 

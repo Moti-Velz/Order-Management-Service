@@ -9,16 +9,14 @@ public class MenuItem {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-    private int restaurantId;
     private String name;
     private double price;
 
     public MenuItem() {
     }
 
-    public MenuItem(int id, int restaurantId, String name, double price) {
+    public MenuItem(int id, String name, double price) {
         this.id = id;
-        this.restaurantId = restaurantId;
         this.name = name;
         this.price = price;
     }
@@ -29,14 +27,6 @@ public class MenuItem {
 
     public void setId(int id) {
         this.id = id;
-    }
-
-    public int getRestaurantId() {
-        return restaurantId;
-    }
-
-    public void setRestaurantId(int restaurantId) {
-        this.restaurantId = restaurantId;
     }
 
     public String getName() {
@@ -59,7 +49,6 @@ public class MenuItem {
     public String toString() {
         return "MenuItem{" +
                 "id=" + id +
-                ", restaurantId=" + restaurantId +
                 ", name='" + name + '\'' +
                 ", price=" + price +
                 '}';

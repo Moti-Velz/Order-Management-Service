@@ -13,6 +13,8 @@ public class Commande {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+
+    //OneToOne Mapping
     private int tableId;
     private String status;
     private Date orderTime;
