@@ -1,11 +1,10 @@
 package com.example.tp_resto.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 import java.sql.Date;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 public class Commande {
@@ -14,17 +13,19 @@ public class Commande {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    //OneToOne Mapping
-    private int tableId;
-    private String status;
+    @OneToMany(mappedBy = "commande", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<CommandeItem> orderItems = new ArrayList<>();
+
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Facture> Facture = new ArrayList<>();
     private Date orderTime;
 
     public Commande() {}
 
-    public Commande(Integer id, int tableId, String status, Date orderTime) {
+    public Commande(Integer id, List<CommandeItem> orderItems, List<Facture> facture, Date orderTime) {
         this.id = id;
-        this.tableId = tableId;
-        this.status = status;
+        this.orderItems = orderItems;
+        Facture = facture;
         this.orderTime = orderTime;
     }
 
@@ -34,22 +35,6 @@ public class Commande {
 
     public void setId(Integer id) {
         this.id = id;
-    }
-
-    public int getTableId() {
-        return tableId;
-    }
-
-    public void setTableId(int tableId) {
-        this.tableId = tableId;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
     }
 
     public Date getOrderTime() {
@@ -64,8 +49,8 @@ public class Commande {
     public String toString() {
         return "Commande{" +
                 "id=" + id +
-                ", tableId=" + tableId +
-                ", status='" + status + '\'' +
+                ", orderItems=" + orderItems +
+                ", Facture=" + Facture +
                 ", orderTime=" + orderTime +
                 '}';
     }
