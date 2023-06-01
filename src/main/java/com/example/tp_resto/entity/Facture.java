@@ -11,8 +11,7 @@ public class Facture {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-
-    @ManyToOne
+    @OneToOne
     @JoinColumn(name = "commande_id", nullable = false)
     private Commande commande;
     private double amount;

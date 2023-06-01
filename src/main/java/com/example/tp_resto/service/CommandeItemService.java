@@ -4,7 +4,7 @@ import com.example.tp_resto.entity.CommandeItem;
 
 public interface CommandeItemService {
 
-    CommandeItem getById(int id);
+//    CommandeItem getById(int id);
 
     void addCommandeItem(CommandeItem foodItem);
 

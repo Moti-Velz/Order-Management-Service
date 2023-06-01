@@ -18,7 +18,7 @@ public class CommandeServiceImpl implements CommandeService {
 
     @Override
     public Commande getById(int id) {
-        return null;
+        return commandeRepository.getById(id);
     }
 
     @Override

@@ -15,10 +15,10 @@ public class CommandeItemServiceImpl implements CommandeItemService{
         this.commandeItemRepository = commandeItemRepository;
     }
 
-    @Override
-    public CommandeItem getById(int id) {
-        return null;
-    }
+//    @Override
+//    public CommandeItem getById(int id) {
+//        return null;
+//    }
 
     @Override
     public void addCommandeItem(CommandeItem foodItem) {

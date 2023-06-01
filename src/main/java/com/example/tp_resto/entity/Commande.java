@@ -12,12 +12,8 @@ public class Commande {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-
     @OneToMany(mappedBy = "commande", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<CommandeItem> orderItems = new ArrayList<>();
-
-    @OneToMany(mappedBy = "commande", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Facture> Facture = new ArrayList<>();
     private Date orderTime;
 
     public Commande() {}
@@ -25,7 +21,6 @@ public class Commande {
     public Commande(Integer id, List<CommandeItem> orderItems, List<Facture> facture, Date orderTime) {
         this.id = id;
         this.orderItems = orderItems;
-        Facture = facture;
         this.orderTime = orderTime;
     }
 
@@ -50,7 +45,6 @@ public class Commande {
         return "Commande{" +
                 "id=" + id +
                 ", orderItems=" + orderItems +
-                ", Facture=" + Facture +
                 ", orderTime=" + orderTime +
                 '}';
     }
