@@ -1,4 +1,4 @@
 package com.example.tp_resto.controller;
 
-public class ControlleurRestaurant {
+public class ControlleurMenuItem {
 }

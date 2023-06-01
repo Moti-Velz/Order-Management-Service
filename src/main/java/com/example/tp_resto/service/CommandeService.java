@@ -6,9 +6,9 @@ import com.example.tp_resto.entity.CommandeItem;
 public interface CommandeService {
     Commande getById(int id);
 
-    void addCommande(CommandeItem orderItem);
+    Commande createCommande(CommandeItem orderItem);
 
-    void updateCommandeById(Integer id, Commande orderItem);
+    Commande updateCommandeById(Integer id, Commande orderItem);
 
-    void deleteCommandeById(Integer id);
+    boolean deleteCommandeById(Integer id);
 }

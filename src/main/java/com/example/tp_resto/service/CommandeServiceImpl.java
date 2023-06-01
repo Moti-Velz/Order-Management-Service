@@ -22,17 +22,23 @@ public class CommandeServiceImpl implements CommandeService {
     }
 
     @Override
-    public void addCommande(CommandeItem orderItem) {
+    public Commande createCommande(CommandeItem orderItem) {
+        return null;
+    }
 
+    public Commande createCommande(Commande orderItem) {
+        return null;
     }
 
     @Override
-    public void updateCommandeById(Integer id, Commande orderItem) {
+    public Commande updateCommandeById(Integer id, Commande orderItem) {
 
+        return null;
     }
 
     @Override
-    public void deleteCommandeById(Integer id) {
+    public boolean deleteCommandeById(Integer id) {
 
+        return false;
     }
 }
