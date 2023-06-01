@@ -6,11 +6,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface ICommandeRepo extends JpaRepository<Commande, Integer> {
 
-    Commande getById(int id);
 
-    void addCommande(CommandeItem orderItem);
-
-    void updateCommandeById(Integer id, Commande orderItem);
-
-    void deleteCommandeById(Integer id);
 }
