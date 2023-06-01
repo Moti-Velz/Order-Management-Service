@@ -1,23 +1,28 @@
 package com.example.tp_resto.entity;
 
+import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
+@Entity
 public class MenuItem {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private String name;
+
+    private String description;
     private double price;
 
     public MenuItem() {
     }
 
-    public MenuItem(int id, String name, double price) {
+    public MenuItem(int id, String name, String description, double price) {
         this.id = id;
         this.name = name;
+        this.description = description;
         this.price = price;
     }
 

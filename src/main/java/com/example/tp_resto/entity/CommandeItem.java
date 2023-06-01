@@ -2,6 +2,7 @@ package com.example.tp_resto.entity;
 
 import jakarta.persistence.*;
 
+@Entity
 public class CommandeItem {
 
     @Id
@@ -9,19 +10,20 @@ public class CommandeItem {
     private int id;
 
     @ManyToOne
-    private int orderId;
+    @JoinColumn(name = "commande_id", nullable = false)
+    private Commande commande;
 
     @OneToOne
-    private int menuItemId;
+    private MenuItem menuItem;
     private int quantity;
 
     public CommandeItem() {
     }
 
-    public CommandeItem(int id, int orderId, int menuItemId, int quantity) {
+    public CommandeItem(int id, Commande commande, MenuItem menuItem, int quantity) {
         this.id = id;
-        this.orderId = orderId;
-        this.menuItemId = menuItemId;
+        this.commande = commande;
+        this.menuItem = menuItem;
         this.quantity = quantity;
     }
 
@@ -31,22 +33,6 @@ public class CommandeItem {
 
     public void setId(int id) {
         this.id = id;
-    }
-
-    public int getOrderId() {
-        return orderId;
-    }
-
-    public void setOrderId(int orderId) {
-        this.orderId = orderId;
-    }
-
-    public int getMenuItemId() {
-        return menuItemId;
-    }
-
-    public void setMenuItemId(int menuItemId) {
-        this.menuItemId = menuItemId;
     }
 
     public int getQuantity() {
@@ -61,8 +47,8 @@ public class CommandeItem {
     public String toString() {
         return "CommandeItem{" +
                 "id=" + id +
-                ", orderId=" + orderId +
-                ", menuItemId=" + menuItemId +
+                ", commande=" + commande +
+                ", menuItem=" + menuItem +
                 ", quantity=" + quantity +
                 '}';
     }
