@@ -8,11 +8,9 @@ public class CommandeItem {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-
     @ManyToOne
     @JoinColumn(name = "commande_id", nullable = false)
     private Commande commande;
-
     @OneToOne
     private MenuItem menuItem;
     private int quantity;
