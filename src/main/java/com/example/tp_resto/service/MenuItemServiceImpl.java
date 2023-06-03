@@ -1,6 +1,7 @@
 package com.example.tp_resto.service;
 
 import com.example.tp_resto.entity.MenuItem;
+import com.example.tp_resto.exception.MenuItemNotFoundException;
 import com.example.tp_resto.repository.IMenuItem;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,7 +22,19 @@ public class MenuItemServiceImpl implements MenuItemService{
 
     @Override
     public MenuItem getById(int id) {
-        return menuRepository.getById(id);
+        Optional<MenuItem> itemOpt = menuRepository.findById(id);
+        MenuItem item = null;
+        if(itemOpt.isPresent()) {
+            item = itemOpt.get();
+        } else {
+            throw new MenuItemNotFoundException("On s'en fou de ce texte");
+        }
+        return item;
+    }
+
+    @Override
+    public List<MenuItem> findAll() {
+        return menuRepository.findAll();
     }
 
     @Override
@@ -36,15 +49,13 @@ public class MenuItemServiceImpl implements MenuItemService{
         if(optionalMenuItem.isPresent()){
             MenuItem existingItem = optionalMenuItem.get();
 
-            // Assuming MenuItem has setName(), setPrice()... etc methods
             existingItem.setName(menuItem.getName());
             existingItem.setPrice(menuItem.getPrice());
             existingItem.setDescription((menuItem.getDescription()));
-            // update any other fields as needed
 
             return menuRepository.save(existingItem);
         } else {
-            return null;
+            throw new MenuItemNotFoundException("MenuItem Not Found");
         }
     }
 
