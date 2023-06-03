@@ -6,6 +6,8 @@ public interface CommandeItemService {
 
 //    CommandeItem getById(int id);
 
+
+    //On doit l'attacher a une Commande
     void addCommandeItem(CommandeItem foodItem);
 
     void updateCommandeItemById(Integer id, CommandeItem foodItem);
