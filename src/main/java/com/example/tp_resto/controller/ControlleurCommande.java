@@ -35,6 +35,8 @@ public class ControlleurCommande {
 
     }
 
+    //Best Practices c'est de retourner l'objet créé
+    //On va aussi faire une gestion d'exception plus pointue ici
     @PostMapping
     public ResponseEntity<?> addCommande(@RequestBody Commande newCommande) {
         Commande commande = null;
