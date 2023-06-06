@@ -1,27 +1,30 @@
 package com.example.tp_resto.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
+/**
+ * id, commande, menuItem, quantity
+ */
 @Entity
 public class CommandeItem {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-    @ManyToOne
-    @JoinColumn(name = "commande_id", nullable = false)
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
+    @JoinColumn(name="commande_id_FK") //On specifie le nom de la colonne
+    @JsonBackReference
     private Commande commande;
-    @OneToOne
+    @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
     private MenuItem menuItem;
     private int quantity;
 
     public CommandeItem() {
     }
 
-    public CommandeItem(int id, Commande commande, MenuItem menuItem, int quantity) {
-        this.id = id;
-        this.commande = commande;
-        this.menuItem = menuItem;
+    public CommandeItem(int quantity) {
         this.quantity = quantity;
     }
 
@@ -41,11 +44,26 @@ public class CommandeItem {
         this.quantity = quantity;
     }
 
+    public Commande getCommande() {
+        return commande;
+    }
+
+    public void setCommande(Commande commande) {
+        this.commande = commande;
+    }
+
+    public MenuItem getMenuItem() {
+        return menuItem;
+    }
+
+    public void setMenuItem(MenuItem menuItem) {
+        this.menuItem = menuItem;
+    }
+
     @Override
     public String toString() {
         return "CommandeItem{" +
                 "id=" + id +
-                ", commande=" + commande +
                 ", menuItem=" + menuItem +
                 ", quantity=" + quantity +
                 '}';

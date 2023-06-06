@@ -18,8 +18,7 @@ public class MenuItem {
     public MenuItem() {
     }
 
-    public MenuItem(int id, String name, String description, double price) {
-        this.id = id;
+    public MenuItem(String name, String description, double price) {
         this.name = name;
         this.description = description;
         this.price = price;
