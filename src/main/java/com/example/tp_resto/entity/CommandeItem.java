@@ -11,7 +11,8 @@ public class CommandeItem {
     @ManyToOne
     @JoinColumn(name = "commande_id", nullable = false)
     private Commande commande;
-    @OneToOne
+    @ManyToOne(cascade = {CascadeType.DETACH,CascadeType.MERGE,CascadeType.PERSIST,CascadeType.REFRESH})
+    @JoinColumn(name = "MenuItem")
     private MenuItem menuItem;
     private int quantity;
 
@@ -39,6 +40,22 @@ public class CommandeItem {
 
     public void setQuantity(int quantity) {
         this.quantity = quantity;
+    }
+
+    public Commande getCommande() {
+        return commande;
+    }
+
+    public void setCommande(Commande commande) {
+        this.commande = commande;
+    }
+
+    public MenuItem getMenuItem() {
+        return menuItem;
+    }
+
+    public void setMenuItem(MenuItem menuItem) {
+        this.menuItem = menuItem;
     }
 
     @Override

@@ -1,16 +1,24 @@
 package com.example.tp_resto.service;
 
+import com.example.tp_resto.entity.Commande;
 import com.example.tp_resto.entity.CommandeItem;
+import com.example.tp_resto.entity.MenuItem;
 
 public interface CommandeItemService {
 
-//    CommandeItem getById(int id);
+  CommandeItem getById(int id);
 
 
     //On doit l'attacher a une Commande
-    void addCommandeItem(CommandeItem foodItem);
+    //void addCommandeItem(MenuItem menuItem, CommandeItem foodItem);
 
-    void updateCommandeItemById(Integer id, CommandeItem foodItem);
+    boolean updateCommandeItemById(Integer id, CommandeItem foodItem);
 
-    void deleteCommandeItemById(Integer id);
+    boolean updateCommandeItemByNameOnCommande(Commande commande, CommandeItem foodItem);
+
+    boolean deleteCommandeItemById(Integer id);
+
+  boolean deleteCommandeItemByNameOnCommande(Commande commande, CommandeItem foodItem);
+
+  CommandeItem addCommandeItem(CommandeItem commandeItem);
 }
