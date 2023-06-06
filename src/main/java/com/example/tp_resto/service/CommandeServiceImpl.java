@@ -1,10 +1,11 @@
 package com.example.tp_resto.service;
 
 import com.example.tp_resto.entity.Commande;
-import com.example.tp_resto.entity.CommandeItem;
 import com.example.tp_resto.repository.ICommandeRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class CommandeServiceImpl implements CommandeService {
@@ -22,12 +23,13 @@ public class CommandeServiceImpl implements CommandeService {
     }
 
     @Override
-    public Commande createCommande(CommandeItem orderItem) {
-        return null;
+    public List<Commande> getAll() {
+        return commandeRepository.findAll();
     }
 
-    public Commande createCommande(Commande orderItem) {
-        return null;
+    @Override
+    public Commande saveCommande(Commande order) {
+        return commandeRepository.save(order);
     }
 
     @Override

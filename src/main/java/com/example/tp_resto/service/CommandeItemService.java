@@ -10,6 +10,8 @@ public interface CommandeItemService {
     //On doit l'attacher a une Commande
     void addCommandeItem(CommandeItem foodItem);
 
+    void saveItem(CommandeItem item);
+
     void updateCommandeItemById(Integer id, CommandeItem foodItem);
 
     void deleteCommandeItemById(Integer id);

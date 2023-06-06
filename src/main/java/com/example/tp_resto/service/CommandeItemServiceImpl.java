@@ -26,6 +26,11 @@ public class CommandeItemServiceImpl implements CommandeItemService{
     }
 
     @Override
+    public void saveItem(CommandeItem item) {
+        commandeItemRepository.save(item);
+    }
+
+    @Override
     public void updateCommandeItemById(Integer id, CommandeItem foodItem) {
 
     }

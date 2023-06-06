@@ -3,10 +3,14 @@ package com.example.tp_resto.service;
 import com.example.tp_resto.entity.Commande;
 import com.example.tp_resto.entity.CommandeItem;
 
+import java.util.List;
+
 public interface CommandeService {
     Commande getById(int id);
 
-    Commande createCommande(CommandeItem orderItem);
+    List<Commande> getAll();
+
+    Commande saveCommande(Commande order);
 
     Commande updateCommandeById(Integer id, Commande orderItem);
 
