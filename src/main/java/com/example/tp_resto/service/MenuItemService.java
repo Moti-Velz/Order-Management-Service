@@ -10,9 +10,11 @@ public interface MenuItemService {
 
     MenuItem getById(int id);
 
+    MenuItem getByName(String name);
+
     List<MenuItem> findAll();
 
-    MenuItem createMenuItem(MenuItem menuItem);
+    MenuItem save(MenuItem menuItem);
 
     MenuItem updateMenuItemById(int id, MenuItem menuItem);
 

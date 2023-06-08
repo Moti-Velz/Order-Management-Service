@@ -15,16 +15,6 @@ public class CommandeItemServiceImpl implements CommandeItemService{
         this.commandeItemRepository = commandeItemRepository;
     }
 
-//    @Override
-//    public CommandeItem getById(int id) {
-//        return null;
-//    }
-
-    @Override
-    public void addCommandeItem(CommandeItem foodItem) {
-
-    }
-
     @Override
     public void saveItem(CommandeItem item) {
         commandeItemRepository.save(item);

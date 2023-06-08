@@ -2,6 +2,8 @@ package com.example.tp_resto.entity;
 
 import jakarta.persistence.*;
 
+import java.sql.Timestamp;
+import java.time.Instant;
 import java.util.Date;
 import java.util.Objects;
 
@@ -14,17 +16,17 @@ public class Facture {
     @OneToOne
     @JoinColumn(name = "commande_id", nullable = false)
     private Commande commande;
-    private double amount;
+    private double prix;
     private String status;
-    private Date billTime;
+    private Instant billTime;
 
     public Facture() {
     }
 
-    public Facture(int id, Commande commande, double amount, String status, Date billTime) {
+    public Facture(int id, Commande commande, double amount, String status, Instant billTime) {
         this.id = id;
         this.commande = commande;
-        this.amount = amount;
+        this.prix = amount;
         this.status = status;
         this.billTime = billTime;
     }
@@ -45,12 +47,12 @@ public class Facture {
         this.commande = commande;
     }
 
-    public double getAmount() {
-        return amount;
+    public double getPrix() {
+        return prix;
     }
 
-    public void setAmount(double amount) {
-        this.amount = amount;
+    public void setPrix(double prix) {
+        this.prix = prix;
     }
 
     public String getStatus() {
@@ -61,11 +63,11 @@ public class Facture {
         this.status = status;
     }
 
-    public Date getBillTime() {
+    public Instant getBillTime() {
         return billTime;
     }
 
-    public void setBillTime(Date billTime) {
+    public void setBillTime(Instant billTime) {
         this.billTime = billTime;
     }
 
@@ -74,7 +76,7 @@ public class Facture {
         return "Facture{" +
                 "id=" + id +
                 ", commande=" + commande +
-                ", amount=" + amount +
+                ", prix=" + prix +
                 ", status='" + status + '\'' +
                 ", billTime=" + billTime +
                 '}';
@@ -85,11 +87,11 @@ public class Facture {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Facture facture = (Facture) o;
-        return id == facture.id && Double.compare(facture.amount, amount) == 0 && Objects.equals(commande, facture.commande) && Objects.equals(status, facture.status) && Objects.equals(billTime, facture.billTime);
+        return id == facture.id && Double.compare(facture.prix, prix) == 0 && Objects.equals(commande, facture.commande) && Objects.equals(status, facture.status) && Objects.equals(billTime, facture.billTime);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, commande, amount, status, billTime);
+        return Objects.hash(id, commande, prix, status, billTime);
     }
 }

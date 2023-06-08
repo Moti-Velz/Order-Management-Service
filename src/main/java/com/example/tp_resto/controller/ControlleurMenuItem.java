@@ -47,7 +47,7 @@ public class ControlleurMenuItem {
     public ResponseEntity<?> addMenuItem(@RequestBody MenuItem newMenuItem) {
         MenuItem menuItem = null;
         try {
-            menuItem = menuItemService.createMenuItem(newMenuItem);
+            menuItem = menuItemService.save(newMenuItem);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("MenuItem non créée");
         }

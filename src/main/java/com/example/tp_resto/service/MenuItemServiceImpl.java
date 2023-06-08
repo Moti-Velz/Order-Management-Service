@@ -33,12 +33,18 @@ public class MenuItemServiceImpl implements MenuItemService{
     }
 
     @Override
+    public MenuItem getByName(String name) {
+        return menuRepository.findByNameIgnoreCase(name);
+    }
+
+
+    @Override
     public List<MenuItem> findAll() {
         return menuRepository.findAll();
     }
 
     @Override
-    public MenuItem createMenuItem(MenuItem menuItem) {
+    public MenuItem save(MenuItem menuItem) {
         return menuRepository.save(menuItem);
     }
 

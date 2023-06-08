@@ -78,6 +78,14 @@ public class Commande {
         this.orderItems = orderItems;
     }
 
+    public double getPrixTotal(){
+        double total = 0;
+        for(CommandeItem food : orderItems){
+            total += food.getMenuItem().getPrice();
+        }
+        return total;
+    }
+
     @Override
     public String toString() {
         return "Commande{" +

@@ -17,7 +17,7 @@ public class CommandeItem {
     @JoinColumn(name="commande_id_FK") //On specifie le nom de la colonne
     @JsonBackReference
     private Commande commande;
-    @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
+    @OneToOne
     private MenuItem menuItem;
     private int quantity;
 
@@ -62,10 +62,10 @@ public class CommandeItem {
 
     @Override
     public String toString() {
-        return "CommandeItem{" +
+        return "{" +
                 "id=" + id +
                 ", menuItem=" + menuItem +
                 ", quantity=" + quantity +
-                '}';
+                "}\n";
     }
 }
