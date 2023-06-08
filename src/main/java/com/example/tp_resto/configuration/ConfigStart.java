@@ -89,5 +89,9 @@ public class ConfigStart implements CommandLineRunner {
         System.out.println("==================");
         System.out.println(savedFacture);
 
+//        for(CommandeItem items : savedFacture.getCommande().getOrderItems()) {
+//            items.getMenuItem();
+//        }
+
     }
 }

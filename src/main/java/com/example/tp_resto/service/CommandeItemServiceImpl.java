@@ -16,8 +16,9 @@ public class CommandeItemServiceImpl implements CommandeItemService{
     }
 
     @Override
-    public void saveItem(CommandeItem item) {
+    public CommandeItem saveItem(CommandeItem item) {
         commandeItemRepository.save(item);
+        return item;
     }
 
     @Override
