@@ -54,8 +54,6 @@ public class ControlleurCommandeItem {
             return ResponseEntity.ok(savedCommande);
         }
 
-
-
     @PostMapping
         public ResponseEntity<Commande> createCommandeItem
             (@RequestBody Map<String, Integer> body) {
@@ -63,6 +61,7 @@ public class ControlleurCommandeItem {
             int commandeId = body.get("commandeId");
             int menuItemId = body.get("menuItemId");
             int quantity = body.get("quantity");
+
 
             // Fetch the Commande and MenuItem entities
             MenuItem menuItem = menuItemService.getById(menuItemId);
@@ -84,4 +83,15 @@ public class ControlleurCommandeItem {
             // Return the saved CommandeItem as the response
             return ResponseEntity.ok(savedCommande);
         }
+
+    //@PostMapping("/")
+
+    @PostMapping("/commande/{commandeId}")
+        public CommandeItem addMenuItemToCommande(@PathVariable int commandeId, @RequestBody CommandeItem commandeItem) {
+
+            Commande commande = commandeService.getById(commandeId);
+            commandeService.addItemToCommande(commande, commandeItem);
+            return commandeItem;
     }
+
+}

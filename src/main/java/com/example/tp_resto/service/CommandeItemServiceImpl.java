@@ -5,6 +5,8 @@ import com.example.tp_resto.repository.ICommandeItemRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 public class CommandeItemServiceImpl implements CommandeItemService{
 
@@ -14,6 +16,8 @@ public class CommandeItemServiceImpl implements CommandeItemService{
     public CommandeItemServiceImpl(ICommandeItemRepo commandeItemRepository){
         this.commandeItemRepository = commandeItemRepository;
     }
+
+
 
     @Override
     public CommandeItem saveItem(CommandeItem item) {
@@ -29,5 +33,10 @@ public class CommandeItemServiceImpl implements CommandeItemService{
     @Override
     public void deleteCommandeItemById(Integer id) {
 
+    }
+
+    @Override
+    public Optional<CommandeItem> getById(int id) {
+        return commandeItemRepository.findById(id);
     }
 }

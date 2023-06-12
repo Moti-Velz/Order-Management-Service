@@ -44,6 +44,9 @@ public class Commande {
         if(orderItems == null) {
             orderItems = new ArrayList<>();
         }
+        //verifie si le menuItem est la (avec son id)
+        //Si oui -> incremente la qte
+        //Si non -> ajouter normal
 
         orderItems.add(item);
         item.setCommande(this);

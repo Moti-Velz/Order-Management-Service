@@ -51,7 +51,6 @@ public class ControlleurCommande {
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Failed to retrieve Commande");
         }
-
     }
 
     //Best Practices c'est de retourner l'objet créé

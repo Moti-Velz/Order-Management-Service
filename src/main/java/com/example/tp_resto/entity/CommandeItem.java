@@ -17,7 +17,7 @@ public class CommandeItem {
     @JoinColumn(name="commande_id_FK") //On specifie le nom de la colonne
     @JsonBackReference
     private Commande commande;
-    @OneToOne
+    @ManyToOne//New
     private MenuItem menuItem;
     private int quantity;
 
