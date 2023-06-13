@@ -41,7 +41,7 @@ public class ControlleurCommande {
 
     @GetMapping("/{id}")
     public ResponseEntity<?> getCommandeById(@PathVariable int id) {
-        Commande commande;
+        Commande commande = null;
         try {
             commande = commandeService.getById(id);
             if (commande != null) {
@@ -54,7 +54,7 @@ public class ControlleurCommande {
         }
     }
 
-    @PostMapping("/commande/{commandeId}")
+    @PostMapping("/{commandeId}")
     public CommandeItem addMenuItemToCommande(@PathVariable int commandeId, @RequestBody CommandeItem commandeItem) {
 
         Commande commande = commandeService.getById(commandeId);
