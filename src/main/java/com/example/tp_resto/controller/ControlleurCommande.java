@@ -2,18 +2,18 @@ package com.example.tp_resto.controller;
 
 import com.example.tp_resto.entity.Commande;
 import com.example.tp_resto.entity.CommandeItem;
-import com.example.tp_resto.entity.MenuItem;
 import com.example.tp_resto.service.CommandeItemService;
 import com.example.tp_resto.service.CommandeService;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 @RestController
-@RequestMapping("/commandes")
 public class ControlleurCommande {
 //servir a starter la commande, add, gestion ect
     private final CommandeService commandeService;
@@ -25,7 +25,7 @@ public class ControlleurCommande {
         this.itemService = itemService;
     }
 
-    @GetMapping
+    @GetMapping("/commandes")
     public ResponseEntity<?> getAllCommandes() {
         List<Commande> list = null;
         try {
@@ -34,12 +34,12 @@ public class ControlleurCommande {
                 return ResponseEntity.status(200).body("Aucune commandes présentes");
             }
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Commandes non trouvées");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Commandes Introuvables");
         }
         return ResponseEntity.status(HttpStatus.FOUND).body(list);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/commandes/{id}")
     public ResponseEntity<?> getCommandeById(@PathVariable int id) {
         Commande commande = null;
         try {
@@ -50,11 +50,11 @@ public class ControlleurCommande {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Commande non trouvée");
             }
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Failed to retrieve Commande");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Commande Introuvable");
         }
     }
 
-    @PostMapping("/{commandeId}")
+    @PostMapping("/commandes/{commandeId}")
     public CommandeItem addMenuItemToCommande(@PathVariable int commandeId, @RequestBody CommandeItem commandeItem) {
 
         Commande commande = commandeService.getById(commandeId);
@@ -62,10 +62,26 @@ public class ControlleurCommande {
         return commandeItem;
     }
 
+    //Nouvelle Methode -> reste a link les itemCommande vers commande (commande_id_FK)
+    @Transactional
+    @PostMapping("/creation-commande")
+    public Commande createCommandeWithItems(@RequestBody List<CommandeItem> listeCommandeItem) {
+
+        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+        Commande commande = new Commande();
+        commande.setOrderTime(timestamp);
+        Commande savedCommande = commandeService.saveCommande(commande);
+
+        for(CommandeItem item : listeCommandeItem) {
+            commandeService.addItemToCommande(savedCommande, item);
+        }
+        return commande;
+    }
+
     //Best Practices c'est de retourner l'objet créé
     //On va aussi faire une gestion d'exception plus pointue ici
     //Semble fonctionner, à tester
-    @PostMapping
+    @PostMapping("/commandes")
     public ResponseEntity<Commande> createCommande(@RequestBody Commande newCommande) {
 
         Commande savedCommande = null;
@@ -80,16 +96,16 @@ public class ControlleurCommande {
         }
         return new ResponseEntity<>(savedCommande, HttpStatus.CREATED);
     }
-    @PostMapping("commandeAdd")
-    public ResponseEntity<Commande> createCommande1(@RequestBody Commande commande, @RequestBody CommandeItem commandeItem)
-    {
-        List<CommandeItem> commandeItem1 = commande.getOrderItems();
-        commande.setOrderItems(commandeItem1);
-        Commande savedCommande = this.commandeService.saveCommande(commande);
-        return new ResponseEntity<>(savedCommande, HttpStatus.CREATED);
-    }
+//    @PostMapping("commandeAdd")
+//    public ResponseEntity<Commande> createCommande1(@RequestBody Commande commande, @RequestBody CommandeItem commandeItem)
+//    {
+//        List<CommandeItem> commandeItem1 = commande.getOrderItems();
+//        commande.setOrderItems(commandeItem1);
+//        Commande savedCommande = this.commandeService.saveCommande(commande);
+//        return new ResponseEntity<>(savedCommande, HttpStatus.CREATED);
+//    }
 
-    @PutMapping("/{id}")
+    @PutMapping("/commandes/{id}")
     public ResponseEntity<?> updateCommandeById(@PathVariable int id, @RequestBody Commande updatedCommande) {
 
         if (updatedCommande == null) {
@@ -108,19 +124,19 @@ public class ControlleurCommande {
         }
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/commandes/{id}")
     public ResponseEntity<?> deleteCommandeById(@PathVariable int id) {
         try {
             boolean isDeleted = commandeService.deleteCommandeById(id);
             if (isDeleted) {
-                return ResponseEntity.ok("Commande "+id+" a ete supprimer avec success ! motherfucker");
+                return ResponseEntity.ok("Commande " + id + " à été supprimé avec succès !");
             } else {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Commande not found");
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Commande Introuvable");
 
             }
         } catch (Exception e) {
             e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Failed to delete Commande"+e);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Commande Non Supprimée");
         }
     }
 

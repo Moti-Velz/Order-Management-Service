@@ -82,6 +82,7 @@ public class CommandeServiceImpl implements CommandeService {
             Optional<CommandeItem> existingCommandeItem = commandeItemService.getById(optionalCommandeItemId);
             int actualQte = existingCommandeItem.get().getQuantity();
             CommandeItem concreteCommandeItem = existingCommandeItem.get();
+            concreteCommandeItem.setCommande(commande);
             concreteCommandeItem.setQuantity(actualQte + commandeItem.getQuantity());
             commandeItemService.saveItem(concreteCommandeItem);
         } else {
