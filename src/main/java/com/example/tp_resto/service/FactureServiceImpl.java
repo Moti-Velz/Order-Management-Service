@@ -37,6 +37,8 @@ public class FactureServiceImpl implements FactureService {
                 .orElseThrow(() -> new FactureNotFoundException("Facture No " + id + " Not Found"));
     }
 
+
+    //condition de doublons
     @Override
     public List<Facture> findAll() {
 
@@ -96,6 +98,7 @@ public class FactureServiceImpl implements FactureService {
         }
     }
 
+    //condition de doublons
     @Override
     public void deleteFactureById(int id) {
         Optional<Facture> factureOpt = factureRepo.findById(id);

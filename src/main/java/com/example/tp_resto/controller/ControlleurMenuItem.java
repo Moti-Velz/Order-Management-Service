@@ -54,6 +54,7 @@ public class ControlleurMenuItem {
     }
 
     //Faire la logique d'exception en fonction du type d'exception (not found / doublon)
+    //fonctionne
     @PutMapping("/menuitems/{id}")
     public ResponseEntity<?> updateMenuItem(@PathVariable int id, @RequestBody MenuItem menuItem){
 
@@ -66,6 +67,7 @@ public class ControlleurMenuItem {
         }
     }
 
+    //fonctionnel (simplement changer nom d'erreur)
     @DeleteMapping("/menuitems/{id}")
     public ResponseEntity <String> deleteMenuItemById(@PathVariable int id) {
         boolean deleted = menuItemService.deleteMenuItemById(id);

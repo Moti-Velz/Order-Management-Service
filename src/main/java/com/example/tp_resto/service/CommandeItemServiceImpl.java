@@ -7,6 +7,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
+import java.util.List;
+
 @Service
 public class CommandeItemServiceImpl implements CommandeItemService{
 
@@ -23,6 +25,11 @@ public class CommandeItemServiceImpl implements CommandeItemService{
     public CommandeItem saveItem(CommandeItem item) {
         commandeItemRepository.save(item);
         return item;
+    }
+
+    @Override
+    public List<CommandeItem> findAll() {
+        return commandeItemRepository.findAll();
     }
 
     @Override

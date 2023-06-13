@@ -1,12 +1,18 @@
 package com.example.tp_resto.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
+
 
 /**
  * id, commande, menuItem, quantity
  */
+@JsonIdentityInfo(
+        generator = ObjectIdGenerators.PropertyGenerator.class,
+        property = "id")
 @Entity
 public class CommandeItem {
 
@@ -15,7 +21,7 @@ public class CommandeItem {
     private int id;
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
     @JoinColumn(name="commande_id_FK") //On specifie le nom de la colonne
-    @JsonBackReference
+    //@JsonManagedReference
     private Commande commande;
     @ManyToOne//New
     private MenuItem menuItem;

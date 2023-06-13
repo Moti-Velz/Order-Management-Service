@@ -2,6 +2,7 @@ package com.example.tp_resto.controller;
 
 import com.example.tp_resto.entity.Commande;
 import com.example.tp_resto.entity.CommandeItem;
+import com.example.tp_resto.entity.MenuItem;
 import com.example.tp_resto.service.CommandeItemService;
 import com.example.tp_resto.service.CommandeService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +15,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/commandes")
 public class ControlleurCommande {
-
+//servir a starter la commande, add, gestion ect
     private final CommandeService commandeService;
     private final CommandeItemService itemService;
 
@@ -24,7 +25,7 @@ public class ControlleurCommande {
         this.itemService = itemService;
     }
 
-    @GetMapping("/")
+    @GetMapping
     public ResponseEntity<?> getAllCommandes() {
         List<Commande> list = null;
         try {
@@ -79,6 +80,14 @@ public class ControlleurCommande {
         }
         return new ResponseEntity<>(savedCommande, HttpStatus.CREATED);
     }
+    @PostMapping("commandeAdd")
+    public ResponseEntity<Commande> createCommande1(@RequestBody Commande commande, @RequestBody CommandeItem commandeItem)
+    {
+        List<CommandeItem> commandeItem1 = commande.getOrderItems();
+        commande.setOrderItems(commandeItem1);
+        Commande savedCommande = this.commandeService.saveCommande(commande);
+        return new ResponseEntity<>(savedCommande, HttpStatus.CREATED);
+    }
 
     @PutMapping("/{id}")
     public ResponseEntity<?> updateCommandeById(@PathVariable int id, @RequestBody Commande updatedCommande) {
@@ -112,5 +121,6 @@ public class ControlleurCommande {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Failed to delete Commande");
         }
     }
+
 }
 

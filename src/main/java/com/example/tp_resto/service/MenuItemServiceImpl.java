@@ -45,21 +45,33 @@ public class MenuItemServiceImpl implements MenuItemService{
 
     @Override
     public MenuItem save(MenuItem menuItem) {
-        return menuRepository.save(menuItem);
+        Optional<MenuItem> optionalMenuItem = menuRepository.findMenuItemByName(menuItem.getName());
+
+        if (optionalMenuItem.isPresent()) {
+
+            throw new RuntimeException("Menu déjà existant");
+        } else {
+            return menuRepository.save(menuItem);
+        }
     }
 
     @Override
     public MenuItem updateMenuItemById(int id, MenuItem menuItem) {
         Optional<MenuItem> optionalMenuItem = menuRepository.findById(id);
 
-        if(optionalMenuItem.isPresent()){
+        if (optionalMenuItem.isPresent()) {
             MenuItem existingItem = optionalMenuItem.get();
 
-            existingItem.setName(menuItem.getName());
-            existingItem.setPrice(menuItem.getPrice());
-            existingItem.setDescription((menuItem.getDescription()));
+            if (existingItem.equals(menuItem)) {
+                System.out.println("Impossible d'update menu existant");
+                return existingItem;
+            } else {
+                existingItem.setName(menuItem.getName());
+                existingItem.setPrice(menuItem.getPrice());
+                existingItem.setDescription(menuItem.getDescription());
 
-            return menuRepository.save(existingItem);
+                return menuRepository.save(existingItem);
+            }
 
         } else
             throw new MenuItemNotFoundException("MenuItem Not Found");

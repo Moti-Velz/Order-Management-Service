@@ -1,8 +1,6 @@
 package com.example.tp_resto.entity;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.*;
 import jakarta.persistence.*;
 
 import java.sql.Date;
@@ -13,6 +11,9 @@ import java.util.List;
 /**
  * id, orderItems, ordertime
  */
+@JsonIdentityInfo(
+        generator = ObjectIdGenerators.PropertyGenerator.class,
+        property = "id")
 @Entity
 public class Commande {
 
@@ -26,7 +27,7 @@ public class Commande {
             mappedBy = "commande",
             orphanRemoval = true,
             fetch = FetchType.EAGER)
-    @JsonManagedReference
+    //@JsonBackReference
     //@JoinColumn(name = "commande_id") quand on utilise mappedBy, on ne met pas cette annotation
     private List<CommandeItem> orderItems = new ArrayList<>();
 

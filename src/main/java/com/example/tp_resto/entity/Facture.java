@@ -1,12 +1,16 @@
 package com.example.tp_resto.entity;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.Date;
 import java.util.Objects;
-
+@JsonIdentityInfo(
+        generator = ObjectIdGenerators.PropertyGenerator.class,
+        property = "id")
 @Entity
 @Table(uniqueConstraints = @UniqueConstraint(columnNames = "commande_id"))
 public class Facture {
@@ -70,6 +74,15 @@ public class Facture {
                 ", status='" + status + '\'' +
                 ", billTime=" + billTime +
                 '}';
+    }
+
+    public double getPrixTotal(){
+        double total = 0;
+        Commande commande = this.getCommande();
+        for(CommandeItem food : commande.getOrderItems()){
+            total += food.getMenuItem().getPrice();
+        }
+        return total;
     }
 
     @Override
