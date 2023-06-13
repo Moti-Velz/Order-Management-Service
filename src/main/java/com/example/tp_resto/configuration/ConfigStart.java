@@ -78,8 +78,7 @@ public class ConfigStart implements CommandLineRunner {
         //Bouton Checkout
         Facture facture = new Facture();
         facture.setCommande(tempCommande);
-        facture.setPrix(tempCommande.getPrixTotal()); // example price
-        facture.setStatus("PAID"); // example status
+        facture.setStatus(false); // example status
         Instant instant = Instant.now().truncatedTo(ChronoUnit.SECONDS);
         facture.setBillTime(instant); // set current date and time
 

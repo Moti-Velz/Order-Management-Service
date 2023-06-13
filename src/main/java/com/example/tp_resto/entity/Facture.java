@@ -8,6 +8,7 @@ import java.util.Date;
 import java.util.Objects;
 
 @Entity
+@Table(uniqueConstraints = @UniqueConstraint(columnNames = "commande_id"))
 public class Facture {
 
     @Id
@@ -16,17 +17,15 @@ public class Facture {
     @OneToOne
     @JoinColumn(name = "commande_id", nullable = false)
     private Commande commande;
-    private double prix;
-    private String status;
+    private boolean status;
     private Instant billTime;
 
     public Facture() {
     }
 
-    public Facture(int id, Commande commande, double amount, String status, Instant billTime) {
+    public Facture(int id, Commande commande, double amount, boolean status, Instant billTime) {
         this.id = id;
         this.commande = commande;
-        this.prix = amount;
         this.status = status;
         this.billTime = billTime;
     }
@@ -47,19 +46,11 @@ public class Facture {
         this.commande = commande;
     }
 
-    public double getPrix() {
-        return prix;
-    }
-
-    public void setPrix(double prix) {
-        this.prix = prix;
-    }
-
-    public String getStatus() {
+    public boolean getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(boolean status) {
         this.status = status;
     }
 
@@ -76,7 +67,6 @@ public class Facture {
         return "Facture{" +
                 "id=" + id +
                 ", commande=" + commande +
-                ", prix=" + prix +
                 ", status='" + status + '\'' +
                 ", billTime=" + billTime +
                 '}';
@@ -87,11 +77,11 @@ public class Facture {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Facture facture = (Facture) o;
-        return id == facture.id && Double.compare(facture.prix, prix) == 0 && Objects.equals(commande, facture.commande) && Objects.equals(status, facture.status) && Objects.equals(billTime, facture.billTime);
+        return id == facture.id && Objects.equals(billTime, facture.billTime);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, commande, prix, status, billTime);
+        return Objects.hash(id, commande, status, billTime);
     }
 }

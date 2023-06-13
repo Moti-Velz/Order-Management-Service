@@ -60,9 +60,9 @@ public class MenuItemServiceImpl implements MenuItemService{
             existingItem.setDescription((menuItem.getDescription()));
 
             return menuRepository.save(existingItem);
-        } else {
+
+        } else
             throw new MenuItemNotFoundException("MenuItem Not Found");
-        }
     }
 
     @Override

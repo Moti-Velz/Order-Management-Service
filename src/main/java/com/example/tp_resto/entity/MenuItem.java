@@ -1,9 +1,8 @@
 package com.example.tp_resto.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
+
+import java.util.Objects;
 
 @Entity
 public class MenuItem {
@@ -11,6 +10,8 @@ public class MenuItem {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+
+    @Column(unique = true)
     private String name;
     private String description;
     private double price;
@@ -64,5 +65,18 @@ public class MenuItem {
                 ", description='" + description + '\'' +
                 ", price=" + price +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        MenuItem menuItem = (MenuItem) o;
+        return Double.compare(menuItem.price, price) == 0 && Objects.equals(name, menuItem.name);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, price);
     }
 }

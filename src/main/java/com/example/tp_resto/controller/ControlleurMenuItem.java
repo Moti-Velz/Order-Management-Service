@@ -22,7 +22,7 @@ public class ControlleurMenuItem {
         this.menuItemService = menuItemService;
     }
 
-    //Gestion d'exception ici ?
+
     @GetMapping("/menuitems")
     public ResponseEntity<?> getAllMenuItems(){
         List<MenuItem> List = menuItemService.findAll();
@@ -35,9 +35,8 @@ public class ControlleurMenuItem {
     //L'exception est lancée au niveau du service implémenté
     @GetMapping("/menuitems/{id}")
     public MenuItem getMenuItemById(@PathVariable int id){
-        MenuItem item = null;
         try{
-            return  menuItemService.getById(id);
+            return menuItemService.getById(id);
         }catch(MenuItemNotFoundException ex){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "MenuItem Introuvable");
         }
@@ -54,16 +53,19 @@ public class ControlleurMenuItem {
         return ResponseEntity.status(HttpStatus.CREATED).body(menuItem.getName().toString() + " créée");
     }
 
-    //Faire la logique d'exception avec MenuItemNotFoundException
+    //Faire la logique d'exception en fonction du type d'exception (not found / doublon)
     @PutMapping("/menuitems/{id}")
     public ResponseEntity<?> updateMenuItem(@PathVariable int id, @RequestBody MenuItem menuItem){
+
+        try {
         MenuItem newMenuItem = menuItemService.updateMenuItemById(id, menuItem);
-        if(newMenuItem == null){
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "MenuItem avec id " + id + "introuvable.");
-        } else return ResponseEntity.status(HttpStatus.CREATED).body(newMenuItem.getName().toString() + "mis a jour");
+            return ResponseEntity.status(HttpStatus.CREATED).body(newMenuItem.getName().toString() + " mis a jour");
+
+        } catch (Exception ex) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Impossible d'effectuer cette modification");
+        }
     }
 
-    //Gestion d'exception custom ici aussi
     @DeleteMapping("/menuitems/{id}")
     public ResponseEntity <String> deleteMenuItemById(@PathVariable int id) {
         boolean deleted = menuItemService.deleteMenuItemById(id);

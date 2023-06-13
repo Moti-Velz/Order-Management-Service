@@ -33,9 +33,9 @@ public class ControlleurCommande {
                 return ResponseEntity.status(200).body("Aucune commandes présentes");
             }
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Commande non trouvées");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Commandes non trouvées");
         }
-        return ResponseEntity.status(HttpStatus.CREATED).body(list);
+        return ResponseEntity.status(HttpStatus.FOUND).body(list);
     }
 
     @GetMapping("/{id}")
@@ -44,13 +44,21 @@ public class ControlleurCommande {
         try {
             commande = commandeService.getById(id);
             if (commande != null) {
-                return ResponseEntity.ok(commande);
+                return ResponseEntity.status(HttpStatus.FOUND).body(commande);
             } else {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Commande non trouvée");
             }
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Failed to retrieve Commande");
         }
+    }
+
+    @PostMapping("/commande/{commandeId}")
+    public CommandeItem addMenuItemToCommande(@PathVariable int commandeId, @RequestBody CommandeItem commandeItem) {
+
+        Commande commande = commandeService.getById(commandeId);
+        commandeService.addItemToCommande(commande, commandeItem);
+        return commandeItem;
     }
 
     //Best Practices c'est de retourner l'objet créé
