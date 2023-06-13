@@ -113,12 +113,14 @@ public class ControlleurCommande {
         try {
             boolean isDeleted = commandeService.deleteCommandeById(id);
             if (isDeleted) {
-                return ResponseEntity.ok().build();
+                return ResponseEntity.ok("Commande "+id+" a ete supprimer avec success ! motherfucker");
             } else {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Commande not found");
+
             }
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Failed to delete Commande");
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Failed to delete Commande"+e);
         }
     }
 

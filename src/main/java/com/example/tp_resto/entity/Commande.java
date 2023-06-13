@@ -30,6 +30,17 @@ public class Commande {
     //@JsonBackReference
     //@JoinColumn(name = "commande_id") quand on utilise mappedBy, on ne met pas cette annotation
     private List<CommandeItem> orderItems = new ArrayList<>();
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name="facture_id_FK")
+    private Facture facture;
+
+    public Facture getFacture() {
+        return facture;
+    }
+
+    public void setFacture(Facture facture) {
+        this.facture = facture;
+    }
 
     private Timestamp orderTime;
 

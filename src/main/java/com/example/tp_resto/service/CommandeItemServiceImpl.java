@@ -44,6 +44,7 @@ public class CommandeItemServiceImpl implements CommandeItemService{
 
     @Override
     public Optional<CommandeItem> getById(int id) {
+
         return commandeItemRepository.findById(id);
     }
 }

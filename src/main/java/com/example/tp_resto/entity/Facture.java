@@ -18,8 +18,9 @@ public class Facture {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-    @OneToOne
-    @JoinColumn(name = "commande_id", nullable = false)
+    @OneToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE,
+            CascadeType.PERSIST, CascadeType.REFRESH})
+    @JoinColumn(name = "commande_id")
     private Commande commande;
     private boolean status;
     private Instant billTime;

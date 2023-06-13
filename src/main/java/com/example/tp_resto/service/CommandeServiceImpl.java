@@ -21,6 +21,7 @@ public class CommandeServiceImpl implements CommandeService {
         this.commandeItemService = commandeItemService;
     }
 
+    //done pour linstant
     @Override
     public Commande getById(int id) {
         Optional<Commande> commandeOptional = commandeRepository.findById(id);
@@ -33,6 +34,7 @@ public class CommandeServiceImpl implements CommandeService {
         }
         return commande;
     }
+
 
     @Override
     public List<Commande> getAll() {
@@ -52,8 +54,15 @@ public class CommandeServiceImpl implements CommandeService {
 
     @Override
     public boolean deleteCommandeById(Integer id) {
+        Optional<Commande> commande = commandeRepository.findById(id);
+        if(commande.isPresent()){
+            commandeRepository.deleteById(id);
+            return true;
+        }else{
+            throw new RuntimeException("Commande "+ id+" introuvable");
 
-        return false;
+        }
+
     }
 
     public int checkCommandeItem(CommandeItem commandeItem, Commande commande){
