@@ -1,46 +1,85 @@
 package com.example.tp_resto.service;
 
-import org.junit.jupiter.api.AfterEach;
+import com.example.tp_resto.entity.MenuItem;
+import com.example.tp_resto.exception.MenuItemNotFoundException;
+import com.example.tp_resto.repository.IMenuItem;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 
+import java.util.Optional;
+
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
 import static org.junit.jupiter.api.Assertions.*;
 
 class MenuItemServiceImplTest {
 
+    @Mock
+    IMenuItem menuRepository;
+
+    @InjectMocks
+    MenuItemServiceImpl menuItemService;
+
     @BeforeEach
     void setUp() {
-    }
-
-    @AfterEach
-    void tearDown() {
+        MockitoAnnotations.openMocks(this);
     }
 
     @Test
-    void getById() {
+    void testGetById() {
+        MenuItem item = new MenuItem();
+        when(menuRepository.findById(any(Integer.class))).thenReturn(Optional.of(item));
+
+        MenuItem result = menuItemService.getById(1);
+        assertEquals(item, result);
     }
 
     @Test
-    void getByName() {
+    void testGetByName() {
+        MenuItem item = new MenuItem();
+        when(menuRepository.findByNameIgnoreCase(any(String.class))).thenReturn(item);
+
+        MenuItem result = menuItemService.getByName("name");
+        assertEquals(item, result);
     }
 
     @Test
-    void findAll() {
+    void testFindAll() {
+        // Implementation will depend on your specific requirements
     }
 
     @Test
-    void save() {
+    void testSave() {
+        MenuItem item = new MenuItem();
+        when(menuRepository.findMenuItemByName(any(String.class))).thenReturn(Optional.empty());
+        when(menuRepository.save(any(MenuItem.class))).thenReturn(item);
+
+        MenuItem result = menuItemService.save(new MenuItem());
+        assertEquals(item, result);
     }
 
     @Test
-    void updateMenuItemById() {
+    void testUpdateMenuItemById() {
+        MenuItem item = new MenuItem();
+        when(menuRepository.findById(any(Integer.class))).thenReturn(Optional.of(item));
+        when(menuRepository.save(any(MenuItem.class))).thenReturn(item);
+
+        MenuItem result = menuItemService.updateMenuItemById(1, new MenuItem());
+        assertEquals(item, result);
     }
 
     @Test
-    void deleteMenuItemById() {
+    void testDeleteMenuItemById() {
+        when(menuRepository.existsById(any(Integer.class))).thenReturn(true);
+
+        assertTrue(menuItemService.deleteMenuItemById(1));
     }
 
     @Test
-    void getAll() {
+    void testGetAll() {
+        // Implementation will depend on your specific requirements
     }
 }

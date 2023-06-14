@@ -1,46 +1,168 @@
 package com.example.tp_resto.service;
 
-import org.junit.jupiter.api.AfterEach;
+import com.example.tp_resto.entity.Commande;
+import com.example.tp_resto.entity.CommandeItem;
+import com.example.tp_resto.repository.ICommandeRepo;
+import com.example.tp_resto.service.CommandeServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
+import org.springframework.data.repository.reactive.ReactiveCrudRepository;
+
+import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
-class CommandeServiceImplTest {
+@MockitoSettings(strictness = Strictness.LENIENT) //Pour eviter certains warning concernant les stubs
+public class CommandeServiceImplTest {
+
+    @Mock
+    private ICommandeRepo commandeRepo;
+    @Mock
+    private ICommandeRepo commandeRepository;
+
+    @InjectMocks
+    private CommandeServiceImpl commandeService;
 
     @BeforeEach
-    void setUp() {
-    }
-
-    @AfterEach
-    void tearDown() {
+    public void setUp() throws Exception {
     }
 
     @Test
-    void getById() {
+    void testGetById_found() {
+        Commande commande = new Commande();
+        commande.setId(1);
+
+        when(commandeRepo.findById(1)).thenReturn(Optional.of(commande));
+
+        Commande result = commandeService.getById(1);
+
+        assertEquals(commande, result);
     }
 
     @Test
-    void getAll() {
+    void testGetById_notFound() {
+        when(commandeRepo.findById(1)).thenReturn(Optional.empty());
+
+        assertThrows(RuntimeException.class, () -> commandeService.getById(1));
     }
 
     @Test
-    void saveCommande() {
+    void testGetAll() {
+        Commande commande1 = new Commande();
+        commande1.setId(1);
+
+        Commande commande2 = new Commande();
+        commande2.setId(2);
+
+        when(commandeRepo.findAll()).thenReturn(Arrays.asList(commande1, commande2));
+
+        List<Commande> result = commandeService.getAll();
+
+        assertEquals(2, result.size());
+        assertTrue(result.containsAll(Arrays.asList(commande1, commande2)));
     }
 
     @Test
-    void updateCommandeById() {
+    void testSaveCommande() {
+        Commande commande = new Commande();
+        commande.setId(1);
+
+        when(commandeRepo.save(commande)).thenReturn(commande);
+
+        Commande result = commandeService.saveCommande(commande);
+
+        assertEquals(commande, result);
+    }
+
+    // Test for updateCommandeById
+    @Test
+    void testUpdateCommandeById_ExistingId() {
+        Commande existingCommande = new Commande();
+        Commande newCommande = new Commande();
+        newCommande.setOrderTime(new Timestamp(System.currentTimeMillis()));
+
+        when(commandeRepository.findById(any(Integer.class))).thenReturn(Optional.of(existingCommande));
+        when(commandeRepository.save(any(Commande.class))).thenReturn(newCommande);
+
+        Commande updatedCommande = commandeService.updateCommandeById(1, newCommande);
+
+        assertEquals(newCommande.getOrderTime(), updatedCommande.getOrderTime());
     }
 
     @Test
-    void deleteCommandeById() {
+    void testUpdateCommandeById_NonExistingId() {
+        Commande newCommande = new Commande();
+        newCommande.setOrderTime(new Timestamp(System.currentTimeMillis()));
+        when(commandeRepository.findById(any(Integer.class))).thenReturn(Optional.empty());
+
+        Exception exception = assertThrows(RuntimeException.class, () -> {
+            commandeService.updateCommandeById(1, newCommande);
+        });
+
+        String expectedMessage = "Commande id 1 introuvable";
+        String actualMessage = exception.getMessage();
+
+        assertTrue(actualMessage.contains(expectedMessage));
+    }
+
+    // Test for updateCommandeItemsByCommandeId
+    @Test
+    void testUpdateCommandeItemsByCommandeId_ExistingId() {
+        Commande existingCommande = new Commande();
+        existingCommande.setId(1);
+        List<CommandeItem> newOrderItems = new ArrayList<>();
+        // Fill your newOrderItems list here
+        when(commandeRepository.findById(1)).thenReturn(Optional.of(existingCommande));
+        when(commandeRepository.save(any(Commande.class))).thenReturn(existingCommande);
+
+        Commande updatedCommande = commandeService.updateCommandeItemsByCommandeId(1, newOrderItems);
+
+        assertEquals(newOrderItems, updatedCommande.getOrderItems());
     }
 
     @Test
-    void checkCommandeItem() {
+    void testUpdateCommandeItemsByCommandeId_NonExistingId() {
+        List<CommandeItem> newOrderItems = new ArrayList<>();
+        // Fill your newOrderItems list here
+        when(commandeRepository.findById(any(Integer.class))).thenReturn(Optional.empty());
+
+        Exception exception = assertThrows(RuntimeException.class, () -> {
+            commandeService.updateCommandeItemsByCommandeId(1, newOrderItems);
+        });
+
+        String expectedMessage = "Commande id 1 introuvable";
+        String actualMessage = exception.getMessage();
+
+        assertTrue(actualMessage.contains(expectedMessage));
+    }
+
+
+    @Test
+    void testDeleteCommandeById_found() {
+        Commande commande = new Commande();
+        commande.setId(1);
+
+        when(commandeRepo.findById(1)).thenReturn(Optional.of(commande));
+
+        assertTrue(commandeService.deleteCommandeById(1));
+        verify(commandeRepo, times(1)).deleteById(1);
     }
 
     @Test
-    void addItemToCommande() {
+    void testDeleteCommandeById_notFound() {
+        when(commandeRepo.findById(1)).thenReturn(Optional.empty());
+
+        assertThrows(RuntimeException.class, () -> commandeService.deleteCommandeById(1));
     }
 }

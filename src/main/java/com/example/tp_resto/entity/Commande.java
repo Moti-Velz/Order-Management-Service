@@ -38,10 +38,6 @@ public class Commande {
         return facture;
     }
 
-    public void setFacture(Facture facture) {
-        this.facture = facture;
-    }
-
     private Timestamp orderTime;
 
     public Commande() {
@@ -49,6 +45,10 @@ public class Commande {
 
     public Commande( Timestamp orderTime) {
         this.orderTime = orderTime;
+    }
+
+    public void setFacture(Facture facture) {
+        this.facture = facture;
     }
 
     public void addItem(CommandeItem item) {

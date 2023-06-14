@@ -21,6 +21,11 @@ public class CommandeServiceImpl implements CommandeService {
         this.commandeItemService = commandeItemService;
     }
 
+    @Override
+    public Commande saveCommande(Commande order) {
+        return commandeRepository.save(order);
+    }
+
     //done pour linstant
     @Override
     public Commande getById(int id) {
@@ -34,23 +39,44 @@ public class CommandeServiceImpl implements CommandeService {
         }
         return commande;
     }
-
-
     @Override
     public List<Commande> getAll() {
         return commandeRepository.findAll();
     }
 
-    @Override
-    public Commande saveCommande(Commande order) {
-        return commandeRepository.save(order);
-    }
+
 
     @Override
-    public Commande updateCommandeById(Integer id, Commande orderItem) {
+    public Commande updateCommandeById(Integer id, Commande newCommande) {
+        Optional<Commande> optionalCommande = commandeRepository.findById(id);
 
-        return null;
+        if (optionalCommande.isPresent()) {
+            Commande existingCommande = optionalCommande.get();
+            // assuming Commande has a setOrderTime method.
+            existingCommande.setOrderTime(newCommande.getOrderTime());
+            // add other fields to be updated here
+            return commandeRepository.save(existingCommande);
+        } else {
+            throw new RuntimeException("Commande id " + id + " introuvable");
+        }
     }
+
+
+    @Override
+    public Commande updateCommandeItemsByCommandeId(Integer id, List<CommandeItem> newOrderItems) {
+        Optional<Commande> optionalCommande = commandeRepository.findById(id);
+
+        if (optionalCommande.isPresent()) {
+            Commande existingCommande = optionalCommande.get();
+            // Clear the existing items and replace with new items
+            existingCommande.getOrderItems().clear();
+            existingCommande.getOrderItems().addAll(newOrderItems);
+            return commandeRepository.save(existingCommande);
+        } else {
+            throw new RuntimeException("Commande id " + id + " introuvable");
+        }
+    }
+
 
     @Override
     public boolean deleteCommandeById(Integer id) {
