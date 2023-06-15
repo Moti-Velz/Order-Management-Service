@@ -12,6 +12,7 @@ import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -89,7 +90,7 @@ public class CommandeServiceImplTest {
     void testUpdateCommandeById_ExistingId() {
         Commande existingCommande = new Commande();
         Commande newCommande = new Commande();
-        newCommande.setOrderTime(new Timestamp(System.currentTimeMillis()));
+        newCommande.setOrderTime( LocalDateTime.now());
 
         when(commandeRepository.findById(any(Integer.class))).thenReturn(Optional.of(existingCommande));
         when(commandeRepository.save(any(Commande.class))).thenReturn(newCommande);
@@ -102,7 +103,7 @@ public class CommandeServiceImplTest {
     @Test
     void testUpdateCommandeById_NonExistingId() {
         Commande newCommande = new Commande();
-        newCommande.setOrderTime(new Timestamp(System.currentTimeMillis()));
+        newCommande.setOrderTime(LocalDateTime.now());
         when(commandeRepository.findById(any(Integer.class))).thenReturn(Optional.empty());
 
         Exception exception = assertThrows(RuntimeException.class, () -> {

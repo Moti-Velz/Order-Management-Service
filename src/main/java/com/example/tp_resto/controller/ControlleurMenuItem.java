@@ -3,7 +3,6 @@ import com.example.tp_resto.entity.MenuItem;
 
 import com.example.tp_resto.exception.MenuItemNotFoundException;
 import com.example.tp_resto.service.MenuItemService;
-import com.example.tp_resto.service.MenuItemServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,7 +14,7 @@ import java.util.List;
 @RestController
 public class ControlleurMenuItem {
 
-    private MenuItemService menuItemService;
+    private final MenuItemService menuItemService;
 
     @Autowired
     public ControlleurMenuItem(MenuItemService menuItemService){
@@ -50,7 +49,7 @@ public class ControlleurMenuItem {
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("MenuItem non créée");
         }
-        return ResponseEntity.status(HttpStatus.CREATED).body(menuItem.getName().toString() + " créée");
+        return ResponseEntity.status(HttpStatus.CREATED).body(menuItem.getName() + " créée");
     }
 
     //Faire la logique d'exception en fonction du type d'exception (not found / doublon)
@@ -60,7 +59,7 @@ public class ControlleurMenuItem {
 
         try {
         MenuItem newMenuItem = menuItemService.updateMenuItemById(id, menuItem);
-            return ResponseEntity.status(HttpStatus.CREATED).body(newMenuItem.getName().toString() + " mis a jour");
+            return ResponseEntity.status(HttpStatus.CREATED).body(newMenuItem.getName() + " mis a jour");
 
         } catch (Exception ex) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Impossible d'effectuer cette modification");

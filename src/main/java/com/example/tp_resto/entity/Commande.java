@@ -5,6 +5,9 @@ import jakarta.persistence.*;
 
 import java.sql.Date;
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,14 +40,15 @@ public class Commande {
     public Facture getFacture() {
         return facture;
     }
-
-    private Timestamp orderTime;
+    @Column(columnDefinition = "DATETIME")
+    private LocalDateTime orderTime;
 
     public Commande() {
+        orderTime = LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS);
     }
 
-    public Commande( Timestamp orderTime) {
-        this.orderTime = orderTime;
+    public Commande(LocalDateTime orderTime) {
+        this.orderTime = orderTime.truncatedTo(ChronoUnit.SECONDS);
     }
 
     public void setFacture(Facture facture) {
@@ -74,11 +78,11 @@ public class Commande {
         this.id = id;
     }
 
-    public Timestamp getOrderTime() {
+    public LocalDateTime getOrderTime() {
         return orderTime;
     }
 
-    public void setOrderTime(Timestamp orderTime) {
+    public void setOrderTime(LocalDateTime orderTime) {
         this.orderTime = orderTime;
     }
 

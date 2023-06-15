@@ -10,7 +10,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.sql.Timestamp;
+
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -67,7 +68,7 @@ public class ControlleurCommande {
     @PostMapping("/creation-commande")
     public Commande createCommandeWithItems(@RequestBody List<CommandeItem> listeCommandeItem) {
 
-        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+        LocalDateTime timestamp = LocalDateTime.now();
         Commande commande = new Commande();
         commande.setOrderTime(timestamp);
         Commande savedCommande = commandeService.saveCommande(commande);
@@ -96,14 +97,6 @@ public class ControlleurCommande {
         }
         return new ResponseEntity<>(savedCommande, HttpStatus.CREATED);
     }
-//    @PostMapping("commandeAdd")
-//    public ResponseEntity<Commande> createCommande1(@RequestBody Commande commande, @RequestBody CommandeItem commandeItem)
-//    {
-//        List<CommandeItem> commandeItem1 = commande.getOrderItems();
-//        commande.setOrderItems(commandeItem1);
-//        Commande savedCommande = this.commandeService.saveCommande(commande);
-//        return new ResponseEntity<>(savedCommande, HttpStatus.CREATED);
-//    }
 
     @PutMapping("/commandes/{id}")
     public ResponseEntity<?> updateCommandeById(@PathVariable int id, @RequestBody Commande updatedCommande) {

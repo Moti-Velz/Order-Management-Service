@@ -29,6 +29,11 @@ public class Facture {
     private LocalDateTime billTime;
 
     public Facture() {
+        billTime = LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS);
+    }
+
+    public Facture(LocalDateTime billTime) {
+        this.billTime = billTime.truncatedTo(ChronoUnit.SECONDS);
     }
 
     public Facture(int id, Commande commande, double amount, boolean status, LocalDateTime billTime) {

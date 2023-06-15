@@ -69,8 +69,7 @@ public class ConfigStart implements CommandLineRunner {
 
         commandeItem.setMenuItem(foodItem);
 
-        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-        Commande tempCommande = new Commande(timestamp);
+        Commande tempCommande = new Commande();
 
         tempCommande.addItem(commandeItem);
 
@@ -79,8 +78,7 @@ public class ConfigStart implements CommandLineRunner {
         Facture facture = new Facture();
 
         facture.setStatus(false); // example status
-        LocalDateTime instant = LocalDateTime.now();
-        facture.setBillTime(instant); // set current date and time
+
         tempCommande.setFacture(facture);
         commandeService.saveCommande(tempCommande);
         System.out.println(tempCommande);

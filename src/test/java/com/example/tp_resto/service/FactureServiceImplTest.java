@@ -49,7 +49,7 @@ class FactureServiceImplTest {
     @Test
     void testSaveFacture() {
         Commande commande = new Commande();
-        commande.setOrderTime(Timestamp.valueOf(LocalDateTime.now()));
+        commande.setOrderTime(LocalDateTime.now());
         // Save the Commande object here if necessary
         when(commandeRepository.save(any(Commande.class))).thenReturn(commande);
 
