@@ -9,6 +9,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -23,9 +25,14 @@ class MenuItemServiceImplTest {
     @InjectMocks
     MenuItemServiceImpl menuItemService;
 
+    private MenuItem menuItem;
+
     @BeforeEach
     void setUp() {
+
         MockitoAnnotations.openMocks(this);
+        menuItem = new MenuItem();
+        menuItem.setName("testMenuItem");
     }
 
     @Test
@@ -35,6 +42,13 @@ class MenuItemServiceImplTest {
 
         MenuItem result = menuItemService.getById(1);
         assertEquals(item, result);
+    }
+
+    @Test
+    void testGetByIdNotFound() {
+        when(menuRepository.findById(any(Integer.class))).thenReturn(Optional.empty());
+
+        assertThrows(MenuItemNotFoundException.class, () -> menuItemService.getById(1));
     }
 
     @Test
@@ -48,7 +62,16 @@ class MenuItemServiceImplTest {
 
     @Test
     void testFindAll() {
-        // Implementation will depend on your specific requirements
+        // Prepare the mock behavior
+        List<MenuItem> expectedMenuItems = Arrays.asList(new MenuItem(), new MenuItem(), new MenuItem());
+        when(menuRepository.findAll()).thenReturn(expectedMenuItems);
+
+        // Execute the service method
+        List<MenuItem> actualMenuItems = menuItemService.findAll();
+
+        // Verify the results
+        assertEquals(expectedMenuItems.size(), actualMenuItems.size(), "The returned list size does not match the expected");
+        assertEquals(expectedMenuItems, actualMenuItems, "The returned list does not match the expected");
     }
 
     @Test
@@ -62,6 +85,15 @@ class MenuItemServiceImplTest {
     }
 
     @Test
+    void testSaveExistingName() {
+        MenuItem menuItem2 = new MenuItem();
+        menuItem2.setName("testMenuItem");
+        when(menuRepository.findMenuItemByName(any(String.class))).thenReturn(Optional.of(menuItem2));
+
+        assertThrows(RuntimeException.class, () -> menuItemService.save(menuItem));
+    }
+
+    @Test
     void testUpdateMenuItemById() {
         MenuItem item = new MenuItem();
         when(menuRepository.findById(any(Integer.class))).thenReturn(Optional.of(item));
@@ -72,6 +104,13 @@ class MenuItemServiceImplTest {
     }
 
     @Test
+    void testUpdateMenuItemByIdNotFound() {
+        when(menuRepository.findById(any(Integer.class))).thenReturn(Optional.empty());
+
+        assertThrows(MenuItemNotFoundException.class, () -> menuItemService.updateMenuItemById(1, new MenuItem()));
+    }
+
+    @Test
     void testDeleteMenuItemById() {
         when(menuRepository.existsById(any(Integer.class))).thenReturn(true);
 
@@ -79,7 +118,9 @@ class MenuItemServiceImplTest {
     }
 
     @Test
-    void testGetAll() {
-        // Implementation will depend on your specific requirements
+    void testDeleteMenuItemByIdNotFound() {
+        when(menuRepository.existsById(any(Integer.class))).thenReturn(false);
+
+        assertFalse(menuItemService.deleteMenuItemById(1));
     }
 }

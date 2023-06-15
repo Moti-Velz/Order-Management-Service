@@ -12,6 +12,7 @@ import org.springframework.stereotype.Component;
 
 import java.sql.Timestamp;
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
 
@@ -73,20 +74,17 @@ public class ConfigStart implements CommandLineRunner {
 
         tempCommande.addItem(commandeItem);
 
-        commandeService.saveCommande(tempCommande);
 
         //Bouton Checkout
         Facture facture = new Facture();
-        facture.setCommande(tempCommande);
+
         facture.setStatus(false); // example status
-        Instant instant = Instant.now().truncatedTo(ChronoUnit.SECONDS);
+        LocalDateTime instant = LocalDateTime.now();
         facture.setBillTime(instant); // set current date and time
-
-        Facture savedFacture = factureService.saveFacture(facture);
-
+        tempCommande.setFacture(facture);
+        commandeService.saveCommande(tempCommande);
         System.out.println(tempCommande);
         System.out.println("==================");
-        System.out.println(savedFacture);
 
 //        for(CommandeItem items : savedFacture.getCommande().getOrderItems()) {
 //            items.getMenuItem();

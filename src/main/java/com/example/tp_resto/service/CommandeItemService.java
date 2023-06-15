@@ -1,7 +1,9 @@
 package com.example.tp_resto.service;
 
+import com.example.tp_resto.entity.Commande;
 import com.example.tp_resto.entity.CommandeItem;
 import com.example.tp_resto.entity.MenuItem;
+import jakarta.transaction.Transactional;
 
 import java.util.List;
 
@@ -9,15 +11,19 @@ import java.util.Optional;
 
 public interface CommandeItemService {
 
-    CommandeItem saveItem(CommandeItem item);
-
+    @Transactional
     List<CommandeItem> findAll();
 
-    void updateCommandeItemById(Integer id, CommandeItem foodItem);
+    @Transactional
+    Optional<CommandeItem> findById(int theId);
 
-    void deleteCommandeItemById(Integer id);
+    @Transactional
+    CommandeItem save(CommandeItem theCommandeItem);
 
-    Optional<CommandeItem> getById(int id);
+    @Transactional
+    void deleteById(int theId);
 
-    //GetAllCommandeItemByCommandeId
+    @Transactional
+    List<CommandeItem> findByCommande(Commande theCommande);
+
 }

@@ -2,23 +2,17 @@ package com.example.tp_resto.service;
 
 import com.example.tp_resto.entity.Commande;
 import com.example.tp_resto.entity.CommandeItem;
+import com.example.tp_resto.entity.MenuItem;
 import com.example.tp_resto.repository.ICommandeRepo;
-import com.example.tp_resto.service.CommandeServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
-import org.springframework.data.repository.reactive.ReactiveCrudRepository;
 
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -27,12 +21,17 @@ import static org.mockito.Mockito.*;
 public class CommandeServiceImplTest {
 
     @Mock
-    private ICommandeRepo commandeRepo;
-    @Mock
     private ICommandeRepo commandeRepository;
+    @Mock
+    private CommandeItemServiceImpl commandeItemService;
 
     @InjectMocks
     private CommandeServiceImpl commandeService;
+
+    private CommandeItem commandeItem1;
+    private CommandeItem commandeItem2;
+    private List<CommandeItem> commandeItemList;
+    private Commande commande;
 
     @BeforeEach
     public void setUp() throws Exception {
@@ -43,7 +42,7 @@ public class CommandeServiceImplTest {
         Commande commande = new Commande();
         commande.setId(1);
 
-        when(commandeRepo.findById(1)).thenReturn(Optional.of(commande));
+        when(commandeRepository.findById(1)).thenReturn(Optional.of(commande));
 
         Commande result = commandeService.getById(1);
 
@@ -52,7 +51,7 @@ public class CommandeServiceImplTest {
 
     @Test
     void testGetById_notFound() {
-        when(commandeRepo.findById(1)).thenReturn(Optional.empty());
+        when(commandeRepository.findById(1)).thenReturn(Optional.empty());
 
         assertThrows(RuntimeException.class, () -> commandeService.getById(1));
     }
@@ -65,7 +64,7 @@ public class CommandeServiceImplTest {
         Commande commande2 = new Commande();
         commande2.setId(2);
 
-        when(commandeRepo.findAll()).thenReturn(Arrays.asList(commande1, commande2));
+        when(this.commandeRepository.findAll()).thenReturn(Arrays.asList(commande1, commande2));
 
         List<Commande> result = commandeService.getAll();
 
@@ -78,7 +77,7 @@ public class CommandeServiceImplTest {
         Commande commande = new Commande();
         commande.setId(1);
 
-        when(commandeRepo.save(commande)).thenReturn(commande);
+        when(commandeRepository.save(commande)).thenReturn(commande);
 
         Commande result = commandeService.saveCommande(commande);
 
@@ -153,16 +152,88 @@ public class CommandeServiceImplTest {
         Commande commande = new Commande();
         commande.setId(1);
 
-        when(commandeRepo.findById(1)).thenReturn(Optional.of(commande));
+        when(this.commandeRepository.findById(1)).thenReturn(Optional.of(commande));
 
-        assertTrue(commandeService.deleteCommandeById(1));
-        verify(commandeRepo, times(1)).deleteById(1);
+        assertTrue(this.commandeService.deleteCommandeById(1));
+        verify(this.commandeRepository, times(1)).deleteById(1);
     }
 
     @Test
     void testDeleteCommandeById_notFound() {
-        when(commandeRepo.findById(1)).thenReturn(Optional.empty());
+        when(commandeRepository.findById(1)).thenReturn(Optional.empty());
 
         assertThrows(RuntimeException.class, () -> commandeService.deleteCommandeById(1));
+    }
+
+    @Test
+    public void whenCheckCommandeItemReturnZero_thenVerifyResult() {
+        Commande commande = new Commande();
+        CommandeItem commandeItem = new CommandeItem();
+        MenuItem menuItem = new MenuItem();
+        menuItem.setId(1);
+        commandeItem.setMenuItem(menuItem);
+        commande.setOrderItems(Collections.emptyList());
+
+        int result = commandeService.checkCommandeItem(commandeItem, commande);
+        assertEquals(0, result);
+    }
+
+    @Test
+    public void whenCheckCommandeItemReturnItemId_thenVerifyResult() {
+        Commande commande = new Commande();
+        CommandeItem commandeItem1 = new CommandeItem();
+        MenuItem menuItem1 = new MenuItem();
+        menuItem1.setId(1);
+        commandeItem1.setMenuItem(menuItem1);
+        commandeItem1.setId(1);
+
+        CommandeItem commandeItem2 = new CommandeItem();
+        MenuItem menuItem2 = new MenuItem();
+        menuItem2.setId(1);
+        commandeItem2.setMenuItem(menuItem2);
+
+        commande.setOrderItems(Arrays.asList(commandeItem1));
+
+        int result = commandeService.checkCommandeItem(commandeItem2, commande);
+        assertEquals(1, result);
+    }
+
+    @Test
+    public void whenAddItemToCommandeWithExistingItem_thenVerifyResult() {
+        Commande commande = new Commande();
+        CommandeItem commandeItem = new CommandeItem();
+        MenuItem menuItem = new MenuItem();
+        menuItem.setId(1);
+        commandeItem.setMenuItem(menuItem);
+        commandeItem.setId(1);
+        commandeItem.setQuantity(1);
+        commande.addItem(commandeItem);
+
+        CommandeItem existingCommandeItem = new CommandeItem();
+        existingCommandeItem.setId(1);
+        existingCommandeItem.setQuantity(2);
+
+        when(commandeItemService.findById(anyInt())).thenReturn(Optional.of(existingCommandeItem));
+
+        commandeService.addItemToCommande(commande, commandeItem);
+
+        assertEquals(3, existingCommandeItem.getQuantity());
+        verify(commandeItemService, times(1)).save(existingCommandeItem);
+    }
+
+    @Test
+    public void whenAddItemToCommandeWithNewItem_thenVerifyResult() {
+        Commande commande = new Commande();
+        CommandeItem commandeItem = new CommandeItem();
+        MenuItem menuItem = new MenuItem();
+        menuItem.setId(1);
+        commandeItem.setMenuItem(menuItem);
+        commandeItem.setId(0);
+
+        when(commandeItemService.findById(anyInt())).thenReturn(Optional.empty());
+
+        commandeService.addItemToCommande(commande, commandeItem);
+
+        verify(commandeItemService, times(1)).save(commandeItem);
     }
 }

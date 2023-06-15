@@ -96,8 +96,7 @@ public class CommandeServiceImpl implements CommandeService {
             if(commandeItem1.getMenuItem().getId() == commandeItem.getMenuItem().getId()){
                 return commandeItem1.getId();
             }
-        }
-        return 0;
+        } return 0;
     }
 
     @Override
@@ -105,14 +104,14 @@ public class CommandeServiceImpl implements CommandeService {
 
         int optionalCommandeItemId = checkCommandeItem(commandeItem, commande);
         if(optionalCommandeItemId != 0) {
-            Optional<CommandeItem> existingCommandeItem = commandeItemService.getById(optionalCommandeItemId);
+            Optional<CommandeItem> existingCommandeItem = commandeItemService.findById(optionalCommandeItemId);
             int actualQte = existingCommandeItem.get().getQuantity();
             CommandeItem concreteCommandeItem = existingCommandeItem.get();
             concreteCommandeItem.setCommande(commande);
             concreteCommandeItem.setQuantity(actualQte + commandeItem.getQuantity());
-            commandeItemService.saveItem(concreteCommandeItem);
+            commandeItemService.save(concreteCommandeItem);
         } else {
-            commandeItemService.saveItem(commandeItem);
+            commandeItemService.save(commandeItem);
         }
     }
 }

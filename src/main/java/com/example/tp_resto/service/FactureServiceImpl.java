@@ -6,7 +6,7 @@ import com.example.tp_resto.repository.IFactureRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -50,8 +50,9 @@ public class FactureServiceImpl implements FactureService {
 
 
     @Override
-    public Facture findByDate(Date date) { //TODO
-        return null;
+    public List<Facture> findByDate(LocalDateTime date) { //TODO
+
+        return factureRepo.findByBillTime(date);
     }
 
     //Update

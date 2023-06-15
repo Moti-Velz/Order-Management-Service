@@ -86,8 +86,4 @@ public class MenuItemServiceImpl implements MenuItemService{
             return false;
         }
     }
-
-    public List<MenuItem> getAll() {
-        return menuRepository.findAll();
-    }
 }

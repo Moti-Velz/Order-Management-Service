@@ -6,6 +6,8 @@ import jakarta.persistence.*;
 
 import java.sql.Timestamp;
 import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.Objects;
 @JsonIdentityInfo(
@@ -23,12 +25,13 @@ public class Facture {
     @JoinColumn(name = "commande_id")
     private Commande commande;
     private boolean status;
-    private Instant billTime;
+    @Column(columnDefinition = "DATETIME")
+    private LocalDateTime billTime;
 
     public Facture() {
     }
 
-    public Facture(int id, Commande commande, double amount, boolean status, Instant billTime) {
+    public Facture(int id, Commande commande, double amount, boolean status, LocalDateTime billTime) {
         this.id = id;
         this.commande = commande;
         this.status = status;
@@ -59,12 +62,12 @@ public class Facture {
         this.status = status;
     }
 
-    public Instant getBillTime() {
+    public LocalDateTime getBillTime() {
         return billTime;
     }
 
-    public void setBillTime(Instant billTime) {
-        this.billTime = billTime;
+    public void setBillTime(LocalDateTime billTime) {
+        this.billTime = billTime != null ? billTime.truncatedTo(ChronoUnit.SECONDS) : null;
     }
 
     @Override

@@ -18,7 +18,5 @@ public interface MenuItemService {
 
     MenuItem updateMenuItemById(int id, MenuItem menuItem);
 
-    //UpdateByName?
-
     boolean deleteMenuItemById(int id);
 }

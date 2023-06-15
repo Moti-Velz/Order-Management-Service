@@ -49,6 +49,7 @@ public class Commande {
 
     public void setFacture(Facture facture) {
         this.facture = facture;
+        facture.setCommande(this);
     }
 
     public void addItem(CommandeItem item) {
