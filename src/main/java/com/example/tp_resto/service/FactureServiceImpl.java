@@ -1,5 +1,6 @@
 package com.example.tp_resto.service;
 
+import com.example.tp_resto.entity.Commande;
 import com.example.tp_resto.entity.Facture;
 import com.example.tp_resto.exception.FactureNotFoundException;
 import com.example.tp_resto.repository.IFactureRepo;
@@ -76,7 +77,8 @@ public class FactureServiceImpl implements FactureService {
                         + " existe déja.");
             }
 
-                existingFacture.setCommande(facture.getCommande());
+                Commande commande = facture.getCommande();
+                commande.setFacture(facture);
                 existingFacture.setStatus(facture.getStatus());
                 existingFacture.setBillTime(facture.getBillTime());
 
@@ -89,23 +91,24 @@ public class FactureServiceImpl implements FactureService {
 
     //Delete
     @Override
-    public void deleteFacture(Facture facture) {
+    public boolean deleteFacture(Facture facture) {
         Optional<Facture> factureOpt = factureRepo.findById(facture.getId());
         if(factureOpt.isPresent()){
-
         factureRepo.delete(facture);
+        return true;
         } else {
             throw new FactureNotFoundException("Facture No " + facture.getId() + " Not Found");
         }
+
     }
 
     //condition de doublons
     @Override
-    public void deleteFactureById(int id) {
+    public boolean deleteFactureById(int id) {
         Optional<Facture> factureOpt = factureRepo.findById(id);
         if(factureOpt.isPresent()){
-
             factureRepo.deleteById(id);
+            return true;
         } else {
             throw new FactureNotFoundException("Facture No " + id + " Not Found");
         }

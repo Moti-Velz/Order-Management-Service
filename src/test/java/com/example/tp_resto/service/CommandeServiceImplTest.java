@@ -21,10 +21,11 @@ import static org.mockito.Mockito.*;
 @MockitoSettings(strictness = Strictness.LENIENT) //Pour eviter certains warning concernant les stubs
 public class CommandeServiceImplTest {
 
-    @Mock
-    private ICommandeRepo commandeRepository;
+
     @Mock
     private CommandeItemServiceImpl commandeItemService;
+    @Mock
+    private ICommandeRepo commandeRepo;
 
     @InjectMocks
     private CommandeServiceImpl commandeService;
@@ -43,7 +44,7 @@ public class CommandeServiceImplTest {
         Commande commande = new Commande();
         commande.setId(1);
 
-        when(commandeRepository.findById(1)).thenReturn(Optional.of(commande));
+        when(commandeRepo.findById(1)).thenReturn(Optional.of(commande));
 
         Commande result = commandeService.getById(1);
 
@@ -52,7 +53,7 @@ public class CommandeServiceImplTest {
 
     @Test
     void testGetById_notFound() {
-        when(commandeRepository.findById(1)).thenReturn(Optional.empty());
+        when(commandeRepo.findById(1)).thenReturn(Optional.empty());
 
         assertThrows(RuntimeException.class, () -> commandeService.getById(1));
     }
@@ -61,14 +62,13 @@ public class CommandeServiceImplTest {
     void testGetAll() {
         Commande commande1 = new Commande();
         commande1.setId(1);
-
         Commande commande2 = new Commande();
         commande2.setId(2);
 
-        when(this.commandeRepository.findAll()).thenReturn(Arrays.asList(commande1, commande2));
+        when(this.commandeRepo.findAll()).thenReturn(Arrays.asList(commande1, commande2));
 
         List<Commande> result = commandeService.getAll();
-
+        System.out.println(result.size());
         assertEquals(2, result.size());
         assertTrue(result.containsAll(Arrays.asList(commande1, commande2)));
     }
@@ -78,7 +78,7 @@ public class CommandeServiceImplTest {
         Commande commande = new Commande();
         commande.setId(1);
 
-        when(commandeRepository.save(commande)).thenReturn(commande);
+        when(commandeRepo.save(commande)).thenReturn(commande);
 
         Commande result = commandeService.saveCommande(commande);
 
@@ -92,8 +92,8 @@ public class CommandeServiceImplTest {
         Commande newCommande = new Commande();
         newCommande.setOrderTime( LocalDateTime.now());
 
-        when(commandeRepository.findById(any(Integer.class))).thenReturn(Optional.of(existingCommande));
-        when(commandeRepository.save(any(Commande.class))).thenReturn(newCommande);
+        when(commandeRepo.findById(any(Integer.class))).thenReturn(Optional.of(existingCommande));
+        when(commandeRepo.save(any(Commande.class))).thenReturn(newCommande);
 
         Commande updatedCommande = commandeService.updateCommandeById(1, newCommande);
 
@@ -104,7 +104,7 @@ public class CommandeServiceImplTest {
     void testUpdateCommandeById_NonExistingId() {
         Commande newCommande = new Commande();
         newCommande.setOrderTime(LocalDateTime.now());
-        when(commandeRepository.findById(any(Integer.class))).thenReturn(Optional.empty());
+        when(commandeRepo.findById(any(Integer.class))).thenReturn(Optional.empty());
 
         Exception exception = assertThrows(RuntimeException.class, () -> {
             commandeService.updateCommandeById(1, newCommande);
@@ -123,8 +123,8 @@ public class CommandeServiceImplTest {
         existingCommande.setId(1);
         List<CommandeItem> newOrderItems = new ArrayList<>();
         // Fill your newOrderItems list here
-        when(commandeRepository.findById(1)).thenReturn(Optional.of(existingCommande));
-        when(commandeRepository.save(any(Commande.class))).thenReturn(existingCommande);
+        when(commandeRepo.findById(1)).thenReturn(Optional.of(existingCommande));
+        when(commandeRepo.save(any(Commande.class))).thenReturn(existingCommande);
 
         Commande updatedCommande = commandeService.updateCommandeItemsByCommandeId(1, newOrderItems);
 
@@ -135,7 +135,7 @@ public class CommandeServiceImplTest {
     void testUpdateCommandeItemsByCommandeId_NonExistingId() {
         List<CommandeItem> newOrderItems = new ArrayList<>();
         // Fill your newOrderItems list here
-        when(commandeRepository.findById(any(Integer.class))).thenReturn(Optional.empty());
+        when(commandeRepo.findById(any(Integer.class))).thenReturn(Optional.empty());
 
         Exception exception = assertThrows(RuntimeException.class, () -> {
             commandeService.updateCommandeItemsByCommandeId(1, newOrderItems);
@@ -153,15 +153,15 @@ public class CommandeServiceImplTest {
         Commande commande = new Commande();
         commande.setId(1);
 
-        when(this.commandeRepository.findById(1)).thenReturn(Optional.of(commande));
+        when(this.commandeRepo.findById(1)).thenReturn(Optional.of(commande));
 
         assertTrue(this.commandeService.deleteCommandeById(1));
-        verify(this.commandeRepository, times(1)).deleteById(1);
+        verify(this.commandeRepo, times(1)).deleteById(1);
     }
 
     @Test
     void testDeleteCommandeById_notFound() {
-        when(commandeRepository.findById(1)).thenReturn(Optional.empty());
+        when(commandeRepo.findById(1)).thenReturn(Optional.empty());
 
         assertThrows(RuntimeException.class, () -> commandeService.deleteCommandeById(1));
     }

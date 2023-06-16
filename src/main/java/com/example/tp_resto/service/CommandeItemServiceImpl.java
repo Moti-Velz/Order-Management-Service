@@ -30,7 +30,13 @@ public class CommandeItemServiceImpl implements CommandeItemService{
     @Override
     @Transactional
     public Optional<CommandeItem> findById(int theId) {
-        return commandeItemRepository.findById(theId);
+        Optional<CommandeItem> commandeItemOptional = commandeItemRepository.findById(theId);
+        if(commandeItemOptional.isPresent())
+        {
+            return commandeItemOptional;
+        }else{
+            throw new RuntimeException("Commande item id "+ theId +" introuvable");
+        }
     }
 
     @Override

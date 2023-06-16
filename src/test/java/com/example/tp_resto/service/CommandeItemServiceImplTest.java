@@ -64,8 +64,7 @@ class CommandeItemServiceImplTest {
     @Test
     void findByIdNotFound() {
         when(commandeItemRepository.findById(anyInt())).thenReturn(Optional.empty());
-        Optional<CommandeItem> result = commandeItemService.findById(100);
-        assertFalse(result.isPresent());
+       assertThrows(RuntimeException.class,()-> commandeItemService.findById(100));
         verify(commandeItemRepository, times(1)).findById(anyInt());
     }
 
