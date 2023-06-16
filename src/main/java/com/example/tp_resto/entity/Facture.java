@@ -14,7 +14,6 @@ import java.util.Objects;
         generator = ObjectIdGenerators.PropertyGenerator.class,
         property = "id")
 @Entity
-@Table
 public class Facture {
 
     @Id

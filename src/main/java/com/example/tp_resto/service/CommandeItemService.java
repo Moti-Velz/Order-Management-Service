@@ -24,4 +24,5 @@ public interface CommandeItemService {
     @Transactional
     List<CommandeItem> findByCommande(Commande theCommande);
 
+    void deleteItemFromOrderItems(CommandeItem commandeItem);
 }

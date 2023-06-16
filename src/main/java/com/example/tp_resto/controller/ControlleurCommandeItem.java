@@ -50,8 +50,8 @@ public class ControlleurCommandeItem {
     public ResponseEntity<?> deleteCommandeItem(@PathVariable(value = "commandeItemId") int commandeItemId) {
         CommandeItem commandeItem = commandeItemService.findById(commandeItemId).orElseThrow(() -> new RuntimeException
                 ("CommandeItem No" + commandeItemId + " Introuvable"));
+        commandeItemService.deleteItemFromOrderItems(commandeItem);
 
-        commandeItemService.deleteById(commandeItemId);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok().body("CommandeItem No " + commandeItemId + " supprimé avec succès.");
     }
 }
