@@ -17,6 +17,7 @@ import java.util.List;
 @JsonIdentityInfo(
         generator = ObjectIdGenerators.PropertyGenerator.class,
         property = "id")
+@Table(uniqueConstraints = @UniqueConstraint(columnNames = "facture_id"))
 @Entity
 public class Commande {
 
@@ -34,6 +35,7 @@ public class Commande {
     //@JoinColumn(name = "commande_id") quand on utilise mappedBy, on ne met pas cette annotation
     private List<CommandeItem> orderItems = new ArrayList<>();
     @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "facture_id")
     private Facture facture;
 
     public Facture getFacture() {
@@ -50,8 +52,14 @@ public class Commande {
         this.orderTime = orderTime.truncatedTo(ChronoUnit.SECONDS);
     }
 
+
+    public void removeFacture() {
+        facture.setCommande(null);
+        this.facture = null;
+    }
     public void setFacture(Facture facture) {
         this.facture = facture;
+        facture.setCommande(this);
     }
 
     public void addItem(CommandeItem item) {
@@ -67,10 +75,6 @@ public class Commande {
         item.setCommande(this);
     }
 
-    public void removeFacture() {
-        facture.setCommande(null);
-        this.facture = null;
-    }
 
 
     public Integer getId() {

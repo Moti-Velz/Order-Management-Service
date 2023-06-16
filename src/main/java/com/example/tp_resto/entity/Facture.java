@@ -14,7 +14,7 @@ import java.util.Objects;
         generator = ObjectIdGenerators.PropertyGenerator.class,
         property = "id")
 @Entity
-@Table(uniqueConstraints = @UniqueConstraint(columnNames = "commande_id"))
+@Table
 public class Facture {
 
     @Id
@@ -22,7 +22,6 @@ public class Facture {
     private int id;
     @OneToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE,
             CascadeType.PERSIST, CascadeType.REFRESH})
-    @JoinColumn(name = "commande_id")
     private Commande commande;
     private boolean status;
     @Column(columnDefinition = "DATETIME")

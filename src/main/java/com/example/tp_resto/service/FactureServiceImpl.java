@@ -103,7 +103,7 @@ public class FactureServiceImpl implements FactureService {
 
             if(commande != null) {
                 if (commande.getFacture() != null) {
-                    commande.setFacture(null);
+                    commande.removeFacture();
                     commandeRepository.save(commande);
                 }
             }
