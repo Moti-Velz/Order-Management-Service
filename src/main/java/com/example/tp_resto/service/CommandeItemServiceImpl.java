@@ -3,6 +3,7 @@ package com.example.tp_resto.service;
 import com.example.tp_resto.entity.Commande;
 import com.example.tp_resto.entity.CommandeItem;
 import com.example.tp_resto.repository.ICommandeItemRepo;
+import com.example.tp_resto.repository.ICommandeRepo;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,10 +16,12 @@ import java.util.List;
 public class CommandeItemServiceImpl implements CommandeItemService{
 
     private ICommandeItemRepo commandeItemRepository;
+    private ICommandeRepo commandeRepository;
 
     @Autowired
-    public CommandeItemServiceImpl(ICommandeItemRepo commandeItemRepository){
+    public CommandeItemServiceImpl(ICommandeItemRepo commandeItemRepository, ICommandeRepo commandeRepository){
         this.commandeItemRepository = commandeItemRepository;
+        this.commandeRepository = commandeRepository;
     }
 
     @Override
@@ -56,5 +59,21 @@ public class CommandeItemServiceImpl implements CommandeItemService{
     @Transactional
     public List<CommandeItem> findByCommande(Commande theCommande) {
         return commandeItemRepository.findByCommande(theCommande);
+    }
+
+    @Override
+    public void deleteItemFromOrderItems(CommandeItem commandeItem) {
+        if(commandeItem == null) {
+            throw new RuntimeException("Item de Commande ne peut être nul.");
+        }
+        Optional<Commande> commandeOpt = commandeRepository.findById(commandeItem.getCommande().getId());
+
+        if(!commandeOpt.isPresent()) {
+            throw new RuntimeException("Commande Associée introuvable");
+        }
+        Commande commande = commandeOpt.get();
+        commande.getOrderItems().remove(commandeItem);
+        commandeRepository.save(commande);
+        commandeItemRepository.delete(commandeItem);
     }
 }

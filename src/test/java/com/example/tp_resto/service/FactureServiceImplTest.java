@@ -53,17 +53,17 @@ class FactureServiceImplTest {
         // Save the Commande object here if necessary
         when(commandeRepository.save(any(Commande.class))).thenReturn(commande);
 
-        Facture facture = new Facture();
+        Facture facture = new Facture();//Mise en place de tes objet utiles au test
         facture.setCommande(commande);
         facture.setStatus(true);
         facture.setBillTime(LocalDateTime.now());
 
-        when(factureRepository.existsByCommandeId(anyInt())).thenReturn(false);
+        when(factureRepository.existsByCommandeId(anyInt())).thenReturn(false); //definition du comportement de tes fonctions
         when(factureRepository.save(any(Facture.class))).thenReturn(facture);
 
         Facture savedFacture = factureService.saveFacture(facture);
 
-        assertEquals(savedFacture, facture);
+        assertEquals(savedFacture, facture); //Assertions
         verify(factureRepository, times(1)).save(facture);
     }
 

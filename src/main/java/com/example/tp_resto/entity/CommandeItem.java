@@ -1,9 +1,6 @@
 package com.example.tp_resto.entity;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.fasterxml.jackson.annotation.*;
 import jakarta.persistence.*;
 import org.antlr.v4.runtime.misc.NotNull;
 
@@ -14,6 +11,7 @@ import org.antlr.v4.runtime.misc.NotNull;
 @JsonIdentityInfo(
         generator = ObjectIdGenerators.PropertyGenerator.class,
         property = "id")
+@JsonPropertyOrder({ "id", "menuItem", "quantity", "commande" })
 @Entity
 public class CommandeItem {
 
