@@ -1,5 +1,6 @@
 package com.example.tp_resto.service;
 
+import com.example.tp_resto.entity.Commande;
 import com.example.tp_resto.entity.Facture;
 
 import java.time.LocalDateTime;
@@ -19,4 +20,6 @@ public interface FactureService {
     List<Facture> findAll();
 
     boolean deleteFactureById(int id);
+
+    Facture createFactureExistingCommande(Commande commande);
 }

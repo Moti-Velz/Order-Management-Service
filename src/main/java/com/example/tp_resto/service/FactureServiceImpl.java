@@ -30,8 +30,19 @@ public class FactureServiceImpl implements FactureService {
     public Facture saveFacture(Facture facture) {
         // Check if a Facture with the same commandeId already exists
         if (factureRepo.existsByCommandeId(facture.getCommande().getId())) {
-            throw new IllegalArgumentException("Facture with commande ID " + facture.getCommande().getId() + " already exists.");
+            throw new IllegalArgumentException("Facture with commande ID "
+                    + facture.getCommande().getId() + " already exists.");
         }
+        return factureRepo.save(facture);
+    }
+
+    public Facture createFacture(Commande commande) {
+        // Votre logique de création de facture ici
+        // Vous pouvez utiliser le FactureRepository pour enregistrer la facture en base de données
+
+        // Exemple simplifié pour créer une facture avec la commande
+        Facture facture = new Facture();
+        facture.setCommande(commande);
         return factureRepo.save(facture);
     }
 
@@ -115,5 +126,15 @@ public class FactureServiceImpl implements FactureService {
         } else {
             throw new FactureNotFoundException(" Facture No " + id + " Not Found");
         }
+    }
+
+    @Override
+    public Facture createFactureExistingCommande(Commande commande) {
+        commandeRepository.findById(commande.getId());
+        Facture facture = new Facture();
+        facture.setStatus(false);
+        commande.setFacture(facture);
+        commandeRepository.save(commande);
+        return facture;
     }
 }

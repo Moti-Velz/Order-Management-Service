@@ -17,6 +17,7 @@ public class ControlleurFacture {
 
     private FactureService factureService;
 
+
     @Autowired
     public ControlleurFacture(FactureService factureService) {
         this.factureService = factureService;
@@ -42,15 +43,36 @@ public class ControlleurFacture {
         }
     }
 
-    @PostMapping("/factures")
-    public Facture createFacture(@RequestBody Commande commande)
-    {
-        Facture savedFacture = new Facture();
-        savedFacture.setCommande(commande);
+    @PostMapping("/factures/commandes")
+    public ResponseEntity<?> createFacture(@RequestBody Commande commande) {
+        try {
+            Facture facture = factureService.createFactureExistingCommande(commande);
+            return  ResponseEntity.ok("Creation de la Facture "+facture.getId()+ " a bien ete enregistrer dans la commande numero "
+                    +commande.getId());
 
-        factureService.saveFacture(savedFacture);
-        return savedFacture;
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
     }
+
+
+
+//    @PostMapping("/facturest")
+//    public ResponseEntity<Facture> createFacture2(@RequestBody Commande commande) {
+//        try {
+//
+//            Facture savedFacture = new Facture();
+//            savedFacture.setCommande(commande);
+//                    factureService.saveFacture(savedFacture);
+//            return ResponseEntity.ok(savedFacture);
+//        } catch (IllegalArgumentException e) {
+//            return ResponseEntity.badRequest().body(null);
+//        } catch (Exception e) {
+//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+//        }
+//    }
+
 
     @DeleteMapping("delFacture/{id}")
     public ResponseEntity<?> deleteFactureById(@PathVariable int id)  {

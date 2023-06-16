@@ -79,7 +79,7 @@ public class Facture {
         return "Facture{" +
                 "id=" + id +
                 ", commande=" + commande +
-                ", status='" + status + '\'' +
+                ", status=" + status +
                 ", billTime=" + billTime +
                 '}';
     }
