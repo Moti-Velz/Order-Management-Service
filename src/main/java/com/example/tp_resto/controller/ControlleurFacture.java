@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 public class ControlleurFacture {
@@ -52,15 +53,18 @@ public class ControlleurFacture {
     }
 
     @DeleteMapping("delFacture/{id}")
-    public ResponseEntity<?> deleteFactureById(@PathVariable int id) {
-            Facture facture = factureService.findById(id);
-            boolean isDeleted = factureService.deleteFacture(facture);
-            if (isDeleted) {
-                return ResponseEntity.ok("Facture avec l'id: " + id + " a été supprimée avec succès!");
-            } else {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Facture introuvable");
-            }
-
+    public ResponseEntity<?> deleteFactureById(@PathVariable int id)  {
+            try {
+                boolean deleted = factureService.deleteFactureById(id);
+                if (deleted) {
+                    return ResponseEntity.status(200).body("Facture No " + id + " Supprimée");
+                } else {
+                    return ResponseEntity.status(400).body("Facture No " + id + " Non Supprimée");
+                }
+            }catch ( Exception ex) {
+                String msg = ex.getMessage();
+                    throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Facture Non Supprimée" + msg);
+                }
     }
 
 

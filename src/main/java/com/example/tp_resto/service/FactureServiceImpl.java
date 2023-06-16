@@ -3,7 +3,9 @@ package com.example.tp_resto.service;
 import com.example.tp_resto.entity.Commande;
 import com.example.tp_resto.entity.Facture;
 import com.example.tp_resto.exception.FactureNotFoundException;
+import com.example.tp_resto.repository.ICommandeRepo;
 import com.example.tp_resto.repository.IFactureRepo;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,10 +17,12 @@ import java.util.Optional;
 public class FactureServiceImpl implements FactureService {
 
     private final IFactureRepo factureRepo;
+    private final ICommandeRepo commandeRepository;
 
     @Autowired
-    public FactureServiceImpl(IFactureRepo factureRepo) {
+    public FactureServiceImpl(IFactureRepo factureRepo, ICommandeRepo commandeRepository) {
         this.factureRepo = factureRepo;
+        this.commandeRepository = commandeRepository;
     }
 
     //Create
@@ -32,10 +36,10 @@ public class FactureServiceImpl implements FactureService {
     }
 
     //Read
+    @Transactional
     @Override
     public Facture findById(int id) {
-        return factureRepo.findById(id)
-                .orElseThrow(() -> new FactureNotFoundException("Facture No " + id + " Not Found"));
+        return factureRepo.findById(id).get();
     }
 
 
@@ -88,29 +92,28 @@ public class FactureServiceImpl implements FactureService {
             }
         }
 
-
-    //Delete
-    @Override
-    public boolean deleteFacture(Facture facture) {
-        Optional<Facture> factureOpt = factureRepo.findById(facture.getId());
-        if(factureOpt.isPresent()){
-        factureRepo.delete(facture);
-        return true;
-        } else {
-            throw new FactureNotFoundException("Facture No " + facture.getId() + " Not Found");
-        }
-
-    }
-
     //condition de doublons
+    @Transactional
     @Override
     public boolean deleteFactureById(int id) {
         Optional<Facture> factureOpt = factureRepo.findById(id);
         if(factureOpt.isPresent()){
+            Facture facture = factureOpt.get();
+            Commande commande = facture.getCommande();
+
+            if(commande != null) {
+                if (commande.getFacture() != null) {
+                    commande.setFacture(null);
+                    commandeRepository.save(commande);
+                }
+            }
             factureRepo.deleteById(id);
+            System.out.println("Facture with ID " + id + " deleted successfully");
+
             return true;
+
         } else {
-            throw new FactureNotFoundException("Facture No " + id + " Not Found");
+            throw new FactureNotFoundException(" Facture No " + id + " Not Found");
         }
     }
 }

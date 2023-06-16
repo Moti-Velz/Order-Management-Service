@@ -34,7 +34,6 @@ public class Commande {
     //@JoinColumn(name = "commande_id") quand on utilise mappedBy, on ne met pas cette annotation
     private List<CommandeItem> orderItems = new ArrayList<>();
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name="facture_id_FK")
     private Facture facture;
 
     public Facture getFacture() {
@@ -53,7 +52,6 @@ public class Commande {
 
     public void setFacture(Facture facture) {
         this.facture = facture;
-        facture.setCommande(this);
     }
 
     public void addItem(CommandeItem item) {
@@ -67,6 +65,11 @@ public class Commande {
 
         orderItems.add(item);
         item.setCommande(this);
+    }
+
+    public void removeFacture() {
+        facture.setCommande(null);
+        this.facture = null;
     }
 
 

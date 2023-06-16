@@ -134,7 +134,7 @@ class FactureServiceImplTest {
         Facture facture = new Facture();
         when(factureRepository.findById(any(Integer.class))).thenReturn(Optional.of(facture));
 
-        assertDoesNotThrow(() -> factureService.deleteFacture(facture));
+        assertDoesNotThrow(() -> factureService.deleteFactureById(facture.getId()));
     }
 
     @Test

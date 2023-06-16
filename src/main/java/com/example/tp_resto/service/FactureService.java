@@ -18,7 +18,5 @@ public interface FactureService {
 
     List<Facture> findAll();
 
-    boolean deleteFacture(Facture facture);
-
     boolean deleteFactureById(int id);
 }
