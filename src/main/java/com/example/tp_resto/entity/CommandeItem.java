@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
+import org.antlr.v4.runtime.misc.NotNull;
 
 
 /**
@@ -24,6 +25,7 @@ public class CommandeItem {
     private Commande commande;
     @ManyToOne
     private MenuItem menuItem;
+   
     private int quantity;
 
     public CommandeItem() {

@@ -28,16 +28,13 @@ public class CommandeServiceImpl implements CommandeService {
 
     //done pour linstant
     @Override
-    public Commande getById(int id) {
+    public Optional<Commande> getById(int id) {
         Optional<Commande> commandeOptional = commandeRepository.findById(id);
         Commande commande = null;
-        if(commandeOptional.isPresent())
-        {
-            commande = commandeOptional.get();
-        }else{
-            throw new RuntimeException("Commande id "+ id + " introuvable");
+        if(!commandeOptional.isPresent()) {
+            throw new RuntimeException("Commande id " + id + " introuvable");
         }
-        return commande;
+        return commandeOptional;
     }
     @Override
     public List<Commande> getAll() {
