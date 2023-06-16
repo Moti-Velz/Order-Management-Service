@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 public class ControlleurCommande {
@@ -42,10 +43,10 @@ public class ControlleurCommande {
 
     @GetMapping("/commandes/{id}")
     public ResponseEntity<?> getCommandeById(@PathVariable int id) {
-        Commande commande = null;
+        Optional<Commande> commande = null;
         try {
-            commande = commandeService.getById(id);
-            if (commande != null) {
+             commande = commandeService.getById(id);
+            if (commande.isPresent()) {
                 return ResponseEntity.status(HttpStatus.FOUND).body(commande);
             } else {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Commande non trouvée");
@@ -58,8 +59,11 @@ public class ControlleurCommande {
     @PostMapping("/commandes/{commandeId}")
     public CommandeItem addMenuItemToCommande(@PathVariable int commandeId, @RequestBody CommandeItem commandeItem) {
 
-        Commande commande = commandeService.getById(commandeId);
-        commandeService.addItemToCommande(commande, commandeItem);
+        Optional<Commande> commande = commandeService.getById(commandeId);
+        if(!commande.isPresent()) {
+            throw new RuntimeException("Commande Introuvable");
+        }
+        commandeService.addItemToCommande(commande.get(), commandeItem);
         return commandeItem;
     }
 

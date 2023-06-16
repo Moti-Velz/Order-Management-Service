@@ -46,9 +46,9 @@ public class CommandeServiceImplTest {
 
         when(commandeRepo.findById(1)).thenReturn(Optional.of(commande));
 
-        Commande result = commandeService.getById(1);
+        Optional<Commande> result = commandeService.getById(1);
 
-        assertEquals(commande, result);
+        assertEquals(commande, result.get());
     }
 
     @Test
