@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -51,27 +50,34 @@ public class ControlleurCommande {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Commande No " + id + " Introuvable");
             }
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Commande No " + id + " Introuvable");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Commande No " + id + " Non Supprimée");
         }
     }
 
     @PostMapping("/commandes/{commandeId}")
-    public CommandeItem addMenuItemToCommande(@PathVariable int commandeId, @RequestBody CommandeItem commandeItem) {
+    public Optional<Commande> addMenuItemToCommande(@PathVariable int commandeId, @RequestBody CommandeItem commandeItem) {
 
-        Optional<Commande> commande = commandeService.getById(commandeId);
-        if(!commande.isPresent()) {
-            throw new RuntimeException("Commande Introuvable");
+        try {
+            Optional<Commande> commande = commandeService.getById(commandeId);
+            if(!commande.isPresent()) {
+                throw new RuntimeException("Commande Introuvable");
+            }
+            Commande commandePresente = commande.get();
+            commandePresente.addItem(commandeItem);
+            commandeService.saveCommande(commandePresente);
+
+            return commandeService.getById(commandeId);
+        } catch (Exception ex) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Un problème est survenu lors de l'ajout " +
+                    "des items.");
         }
-        Commande commandePresente = commande.get();
-        commandePresente.addItem(commandeItem);
-        commandeService.saveCommande(commandePresente);
-        return commandeItem;
     }
 
-    //on pourrait utiliser cette methode pour envoyer une liste dèitem et de creer la commande a ce moment
-    @Transactional
+    //Voir ce qu'on peut faire pour retourner le JSON avec les infos de MenuItem
     @PostMapping("/creation-commande")
-    public Commande createCommandeWithItems(@RequestBody List<CommandeItem> listeCommandeItem) {
+    public Optional<Commande> createCommandeWithItems(@RequestBody List<CommandeItem> listeCommandeItem) {
+
+        try {
 
         Commande commande = new Commande();
 
@@ -80,7 +86,11 @@ public class ControlleurCommande {
         }
         Commande savedCommande = commandeService.saveCommande(commande);
 
-        return savedCommande;
+        return commandeService.getById(savedCommande.getId());
+        } catch ( Exception ex) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Un problème est survenu lors de la création " +
+                    "de la commande");
+        }
     }
 
     @PutMapping("/commandes/{id}")
