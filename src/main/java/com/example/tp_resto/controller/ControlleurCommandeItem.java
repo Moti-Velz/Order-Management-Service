@@ -33,6 +33,7 @@ public class ControlleurCommandeItem {
     public List<CommandeItem> getCommandeItemsByCommande(@PathVariable int commandeId) {
         Commande commande = commandeService.getById(commandeId).orElseThrow(() -> new RuntimeException
                 ("Commande No" + commandeId + " Introuvable"));
+
         return commandeItemService.findByCommande(commande);
     }
 
@@ -50,8 +51,8 @@ public class ControlleurCommandeItem {
     public ResponseEntity<?> deleteCommandeItem(@PathVariable(value = "commandeItemId") int commandeItemId) {
         CommandeItem commandeItem = commandeItemService.findById(commandeItemId).orElseThrow(() -> new RuntimeException
                 ("CommandeItem No" + commandeItemId + " Introuvable"));
-        commandeItemService.deleteItemFromOrderItems(commandeItem);
 
+        commandeItemService.deleteItemFromOrderItems(commandeItem);
         return ResponseEntity.ok().body("CommandeItem No " + commandeItemId + " supprimé avec succès.");
     }
 }

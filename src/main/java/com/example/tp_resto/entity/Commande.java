@@ -61,18 +61,30 @@ public class Commande {
         this.facture = facture;
         facture.setCommande(this);
     }
+    public boolean hasItem(MenuItem item) {
+        return this.orderItems.stream()
+                .anyMatch(i -> i.getMenuItem().equals(item));
+    }
+
+    public void incrementItem(CommandeItem item, int quantity) {
+        this.orderItems.stream()
+                .filter(i -> i.getMenuItem().equals(item.getMenuItem()))
+                .findFirst()
+                .ifPresent(i -> i.setQuantity(i.getQuantity() + quantity));
+    }
 
     public void addItem(CommandeItem item) {
-
         if(orderItems == null) {
             orderItems = new ArrayList<>();
         }
-        //verifie si le menuItem est la (avec son id)
-        //Si oui -> incremente la qte
-        //Si non -> ajouter normal
 
-        orderItems.add(item);
-        item.setCommande(this);
+        if(this.hasItem(item.getMenuItem())) {
+            this.incrementItem(item, item.getQuantity());
+        } else {
+            this.orderItems.add(item);
+            item.setCommande(this);
+
+        }
     }
 
 

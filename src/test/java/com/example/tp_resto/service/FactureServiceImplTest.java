@@ -112,12 +112,14 @@ class FactureServiceImplTest {
     @Test
     void testUpdateFacture() {
         Facture existingFacture = new Facture();
-        existingFacture.setCommande(new Commande());
+        Commande existingCommande = new Commande();
+        existingCommande.setId(5);
+        existingCommande.setFacture(existingFacture);
 
         Facture newFacture = new Facture();
         Commande newCommande = new Commande();
         newCommande.setId(5);
-        newFacture.setCommande(newCommande);
+        newCommande.setFacture(newFacture);
 
         when(factureRepository.findById(any(Integer.class))).thenReturn(Optional.of(existingFacture));
         when(factureRepository.existsByCommandeId(any(Integer.class))).thenReturn(false);

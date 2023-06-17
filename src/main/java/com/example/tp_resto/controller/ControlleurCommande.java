@@ -29,15 +29,13 @@ public class ControlleurCommande {
 
     @GetMapping("/commandes")
     public ResponseEntity<?> getAllCommandes() {
-        List<Commande> list = null;
-        try {
-            list = commandeService.getAll();
+            List<Commande> list = commandeService.getAll();
+            if( list == null) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Commandes Introuvables");
+            }
             if (list.isEmpty()) {
                 return ResponseEntity.status(200).body("Aucune commandes présentes");
             }
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Commandes Introuvables");
-        }
         return ResponseEntity.status(HttpStatus.FOUND).body(list);
     }
 
@@ -49,10 +47,10 @@ public class ControlleurCommande {
             if (commande.isPresent()) {
                 return ResponseEntity.status(HttpStatus.FOUND).body(commande);
             } else {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Commande non trouvée");
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Commande No " + id + " Introuvable");
             }
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Commande Introuvable");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Commande No " + id + " Introuvable");
         }
     }
 
