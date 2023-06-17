@@ -12,8 +12,6 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import java.util.*;
 
-import java.sql.Timestamp;
-import java.time.Instant;
 import java.time.LocalDateTime;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -114,12 +112,12 @@ class FactureServiceImplTest {
         Facture existingFacture = new Facture();
         Commande existingCommande = new Commande();
         existingCommande.setId(5);
-        existingCommande.setFacture(existingFacture);
+        existingCommande.setFactureBidirection(existingFacture);
 
         Facture newFacture = new Facture();
         Commande newCommande = new Commande();
         newCommande.setId(5);
-        newCommande.setFacture(newFacture);
+        newCommande.setFactureBidirection(newFacture);
 
         when(factureRepository.findById(any(Integer.class))).thenReturn(Optional.of(existingFacture));
         when(factureRepository.existsByCommandeId(any(Integer.class))).thenReturn(false);

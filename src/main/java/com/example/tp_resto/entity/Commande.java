@@ -2,11 +2,9 @@ package com.example.tp_resto.entity;
 
 import com.fasterxml.jackson.annotation.*;
 import jakarta.persistence.*;
+import jakarta.transaction.Transactional;
 
-import java.sql.Date;
-import java.sql.Timestamp;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
@@ -57,7 +55,7 @@ public class Commande {
         facture.setCommande(null);
         this.facture = null;
     }
-    public void setFacture(Facture facture) {
+    public void setFactureBidirection(Facture facture) {
         this.facture = facture;
         facture.setCommande(this);
     }
@@ -73,6 +71,7 @@ public class Commande {
                 .ifPresent(i -> i.setQuantity(i.getQuantity() + quantity));
     }
 
+    @Transactional
     public void addItem(CommandeItem item) {
         if(orderItems == null) {
             orderItems = new ArrayList<>();
@@ -115,14 +114,6 @@ public class Commande {
 
     public void setOrderItems(List<CommandeItem> orderItems) {
         this.orderItems = orderItems;
-    }
-
-    public double getPrixTotal(){
-        double total = 0;
-        for(CommandeItem food : orderItems){
-            total += food.getMenuItem().getPrice();
-        }
-        return total;
     }
 
     @Override

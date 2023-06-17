@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 
 import java.time.LocalDateTime;
@@ -61,43 +62,25 @@ public class ControlleurCommande {
         if(!commande.isPresent()) {
             throw new RuntimeException("Commande Introuvable");
         }
-        commandeService.addItemToCommande(commande.get(), commandeItem);
+        Commande commandePresente = commande.get();
+        commandePresente.addItem(commandeItem);
+        commandeService.saveCommande(commandePresente);
         return commandeItem;
     }
 
-    //Nouvelle Methode -> reste a link les itemCommande vers commande (commande_id_FK)
+    //on pourrait utiliser cette methode pour envoyer une liste dèitem et de creer la commande a ce moment
     @Transactional
     @PostMapping("/creation-commande")
     public Commande createCommandeWithItems(@RequestBody List<CommandeItem> listeCommandeItem) {
 
-        LocalDateTime timestamp = LocalDateTime.now();
         Commande commande = new Commande();
-        commande.setOrderTime(timestamp);
-        Commande savedCommande = commandeService.saveCommande(commande);
 
         for(CommandeItem item : listeCommandeItem) {
-            commandeService.addItemToCommande(savedCommande, item);
+            commande.addItem(item);
         }
-        return commande;
-    }
+        Commande savedCommande = commandeService.saveCommande(commande);
 
-    //Best Practices c'est de retourner l'objet créé
-    //On va aussi faire une gestion d'exception plus pointue ici
-    //Semble fonctionner, à tester
-    @PostMapping("/commandes")
-    public ResponseEntity<Commande> createCommande(@RequestBody Commande newCommande) {
-
-        Commande savedCommande = null;
-        try {
-            List<CommandeItem> itemList = newCommande.getOrderItems();
-            for(CommandeItem i : itemList){
-                newCommande.addItem(i);
-            }
-             savedCommande = commandeService.saveCommande(newCommande);
-        } catch(Exception ex){
-            ex.printStackTrace();
-        }
-        return new ResponseEntity<>(savedCommande, HttpStatus.CREATED);
+        return savedCommande;
     }
 
     @PutMapping("/commandes/{id}")
@@ -114,7 +97,7 @@ public class ControlleurCommande {
                     return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Commande non trouvée");
                 }
             } catch (Exception e) {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Commande non modifiée");
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Commande Non Modifiée.");
             }
         }
     }
@@ -125,15 +108,13 @@ public class ControlleurCommande {
             boolean isDeleted = commandeService.deleteCommandeById(id);
             if (isDeleted) {
                 return ResponseEntity.ok("Commande " + id + " à été supprimé avec succès !");
-            } else {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Commande Introuvable");
-
             }
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Commande Non Supprimée");
         }
+        throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Un problème est survenu lors de la supression de " +
+                "la commande No " + id);
     }
-
 }
 

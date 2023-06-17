@@ -15,9 +15,5 @@ public interface CommandeService {
 
     Commande updateCommandeById(Integer id, Commande orderItem);
 
-    Commande updateCommandeItemsByCommandeId(Integer id, List<CommandeItem> newOrderItems);
-
     boolean deleteCommandeById(Integer id);
-
-    void addItemToCommande(Commande byId, CommandeItem commandeItem);
 }

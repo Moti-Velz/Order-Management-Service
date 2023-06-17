@@ -2,7 +2,10 @@ package com.example.tp_resto.service;
 
 import com.example.tp_resto.entity.Commande;
 import com.example.tp_resto.entity.CommandeItem;
+import com.example.tp_resto.entity.Facture;
 import com.example.tp_resto.repository.ICommandeRepo;
+import com.example.tp_resto.repository.IFactureRepo;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,11 +17,13 @@ public class CommandeServiceImpl implements CommandeService {
 
     private ICommandeRepo commandeRepository;
     private CommandeItemService commandeItemService;
+    private IFactureRepo factureRepository;
 
     @Autowired
-    public CommandeServiceImpl(ICommandeRepo commandeRepository, CommandeItemService commandeItemService) {
+    public CommandeServiceImpl(ICommandeRepo commandeRepository, CommandeItemService commandeItemService, IFactureRepo factureRepository) {
         this.commandeRepository = commandeRepository;
         this.commandeItemService = commandeItemService;
+        this.factureRepository = factureRepository;
     }
 
     @Override
@@ -43,37 +48,28 @@ public class CommandeServiceImpl implements CommandeService {
 
 
 
+    @Transactional
     @Override
     public Commande updateCommandeById(Integer id, Commande newCommande) {
         Optional<Commande> optionalCommande = commandeRepository.findById(id);
+        Optional<Facture> optionalFacture = factureRepository.findFactureByCommande_Id(id);
 
         if (optionalCommande.isPresent()) {
             Commande existingCommande = optionalCommande.get();
-            // assuming Commande has a setOrderTime method.
+            optionalFacture.ifPresent(existingCommande::setFactureBidirection);
+
             existingCommande.setOrderTime(newCommande.getOrderTime());
-            // add other fields to be updated here
-            return commandeRepository.save(existingCommande);
-        } else {
-            throw new RuntimeException("Commande id " + id + " introuvable");
-        }
-    }
-
-
-    @Override
-    public Commande updateCommandeItemsByCommandeId(Integer id, List<CommandeItem> newOrderItems) {
-        Optional<Commande> optionalCommande = commandeRepository.findById(id);
-
-        if (optionalCommande.isPresent()) {
-            Commande existingCommande = optionalCommande.get();
-            // Clear the existing items and replace with new items
             existingCommande.getOrderItems().clear();
-            existingCommande.getOrderItems().addAll(newOrderItems);
+            existingCommande.setOrderTime(newCommande.getOrderTime());
+
+            for(CommandeItem item : newCommande.getOrderItems()) {
+                existingCommande.addItem(item);
+            }
             return commandeRepository.save(existingCommande);
         } else {
             throw new RuntimeException("Commande id " + id + " introuvable");
         }
     }
-
 
     @Override
     public boolean deleteCommandeById(Integer id) {
@@ -88,28 +84,13 @@ public class CommandeServiceImpl implements CommandeService {
 
     }
 
+    //Helper Function
     public int checkCommandeItem(CommandeItem commandeItem, Commande commande){
         for(CommandeItem commandeItem1 : commande.getOrderItems()) {
             if(commandeItem1.getMenuItem().getId() == commandeItem.getMenuItem().getId()){
                 return commandeItem1.getId();
             }
         } return 0;
-    }
-
-    @Override
-    public void addItemToCommande(Commande commande, CommandeItem commandeItem) {
-
-        int optionalCommandeItemId = checkCommandeItem(commandeItem, commande);
-        if(optionalCommandeItemId != 0) {
-            Optional<CommandeItem> existingCommandeItem = commandeItemService.findById(optionalCommandeItemId);
-            int actualQte = existingCommandeItem.get().getQuantity();
-            CommandeItem concreteCommandeItem = existingCommandeItem.get();
-            concreteCommandeItem.setCommande(commande);
-            concreteCommandeItem.setQuantity(actualQte + commandeItem.getQuantity());
-            commandeItemService.save(concreteCommandeItem);
-        } else {
-            commandeItemService.save(commandeItem);
-        }
     }
 }
 

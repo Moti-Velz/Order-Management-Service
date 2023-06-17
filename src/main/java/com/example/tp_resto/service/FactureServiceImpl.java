@@ -93,7 +93,7 @@ public class FactureServiceImpl implements FactureService {
             }
 
                 Commande commande = facture.getCommande();
-                commande.setFacture(facture);
+                commande.setFactureBidirection(facture);
                 existingFacture.setStatus(facture.getStatus());
                 existingFacture.setBillTime(facture.getBillTime());
 
@@ -133,7 +133,7 @@ public class FactureServiceImpl implements FactureService {
         commandeRepository.findById(commande.getId());
         Facture facture = new Facture();
         facture.setStatus(false);
-        commande.setFacture(facture);
+        commande.setFactureBidirection(facture);
         commandeRepository.save(commande);
         return facture;
     }

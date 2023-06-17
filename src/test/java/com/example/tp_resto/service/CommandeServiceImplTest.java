@@ -216,7 +216,7 @@ public class CommandeServiceImplTest {
 
         when(commandeItemService.findById(anyInt())).thenReturn(Optional.of(existingCommandeItem));
 
-        commandeService.addItemToCommande(commande, commandeItem);
+        commande.addItem(commandeItem);
 
         assertEquals(3, existingCommandeItem.getQuantity());
         verify(commandeItemService, times(1)).save(existingCommandeItem);
@@ -233,7 +233,7 @@ public class CommandeServiceImplTest {
 
         when(commandeItemService.findById(anyInt())).thenReturn(Optional.empty());
 
-        commandeService.addItemToCommande(commande, commandeItem);
+        commande.addItem(commandeItem);
 
         verify(commandeItemService, times(1)).save(commandeItem);
     }

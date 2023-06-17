@@ -72,7 +72,7 @@ public class ConfigStart implements CommandLineRunner {
 
         facture.setStatus(false); // example status
 
-        tempCommande.setFacture(facture);
+        tempCommande.setFactureBidirection(facture);
         commandeService.saveCommande(tempCommande);
         System.out.println(tempCommande);
         System.out.println("==================");
@@ -101,7 +101,7 @@ public class ConfigStart implements CommandLineRunner {
             Facture newFacture = new Facture();
             newFacture.setStatus(false); // Statut non Payé
 
-            newCommande.setFacture(newFacture);
+            newCommande.setFactureBidirection(newFacture);
             commandeService.saveCommande(newCommande);
 
             System.out.println(newCommande);
