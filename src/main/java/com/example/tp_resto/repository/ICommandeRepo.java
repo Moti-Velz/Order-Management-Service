@@ -10,5 +10,5 @@ import java.util.Optional;
 public interface ICommandeRepo extends JpaRepository<Commande, Integer> {
 
 
-    Optional<Facture> findById(Optional<Commande> byId);
+    Optional<Commande> findByFacture_Id(Integer id);
 }

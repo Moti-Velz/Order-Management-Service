@@ -1,7 +1,9 @@
 package com.example.tp_resto.service;
 
+import com.example.tp_resto.entity.CommandeItem;
 import com.example.tp_resto.entity.MenuItem;
 import com.example.tp_resto.exception.MenuItemNotFoundException;
+import com.example.tp_resto.repository.ICommandeItemRepo;
 import com.example.tp_resto.repository.IMenuItem;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,10 +15,12 @@ import java.util.Optional;
 public class MenuItemServiceImpl implements MenuItemService{
 
     IMenuItem menuRepository;
+    ICommandeItemRepo commandeItemRepo;
 
 
     @Autowired
-    MenuItemServiceImpl(IMenuItem menuRepository){
+    MenuItemServiceImpl(IMenuItem menuRepository, ICommandeItemRepo commandeItemRepo) {
+        this.commandeItemRepo = commandeItemRepo;
         this.menuRepository=menuRepository;
     }
 
@@ -79,11 +83,19 @@ public class MenuItemServiceImpl implements MenuItemService{
 
     @Override
     public boolean deleteMenuItemById(int id) {
-        if(menuRepository.existsById(id)){
-            menuRepository.deleteById(id);
-            return true;
-        } else {
-            return false;
+
+        Optional<MenuItem> menuItemOptional = menuRepository.findById(id);
+        if(!menuItemOptional.isPresent()) {
+            throw new MenuItemNotFoundException("Article Introuvable");
         }
+
+        List<CommandeItem> listeItem = commandeItemRepo.findCommandeItemByMenuItem_Id(id);
+        if (!listeItem.isEmpty()) {
+            listeItem.stream().forEach(item -> item.setMenuItem(null));
+        }
+
+        MenuItem menuItem = menuItemOptional.get();
+        menuRepository.delete(menuItem);
+        return true;
     }
 }

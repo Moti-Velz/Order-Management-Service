@@ -18,6 +18,7 @@ public interface IFactureRepo extends JpaRepository<Facture, Integer> {
     Optional<Facture> findFactureByCommande_Id(Integer id);
 
 
+
     List<Facture> findByBillTime(LocalDateTime billTime);
     }
 

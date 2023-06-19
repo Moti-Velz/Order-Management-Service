@@ -59,17 +59,8 @@ public class Commande {
         this.facture = facture;
         facture.setCommande(this);
     }
-    public boolean hasItem(MenuItem item) {
-        return this.orderItems.stream()
-                .anyMatch(i -> i.getMenuItem().equals(item));
-    }
 
-    public void incrementItem(CommandeItem item, int quantity) {
-        this.orderItems.stream()
-                .filter(i -> i.getMenuItem().equals(item.getMenuItem()))
-                .findFirst()
-                .ifPresent(i -> i.setQuantity(i.getQuantity() + quantity));
-    }
+
 
     @Transactional
     public void addItem(CommandeItem item) {
@@ -85,7 +76,17 @@ public class Commande {
 
         }
     }
+    public boolean hasItem(MenuItem item) {
+        return this.orderItems.stream()
+                .anyMatch(i -> i.getMenuItem().equals(item));
+    }
 
+    public void incrementItem(CommandeItem item, int quantity) {
+        this.orderItems.stream()
+                .filter(i -> i.getMenuItem().equals(item.getMenuItem()))
+                .findFirst()
+                .ifPresent(i -> i.setQuantity(i.getQuantity() + quantity));
+    }
 
 
     public Integer getId() {

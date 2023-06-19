@@ -10,4 +10,5 @@ public interface ICommandeItemRepo extends JpaRepository<CommandeItem, Integer> 
 
 
     List<CommandeItem> findByCommande(Commande theCommande);
+    List<CommandeItem> findCommandeItemByMenuItem_Id(Integer id);
 }

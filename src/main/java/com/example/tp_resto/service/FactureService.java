@@ -21,5 +21,5 @@ public interface FactureService {
 
     boolean deleteFactureById(int id);
 
-    Facture createFactureExistingCommande(Commande commande);
+    Facture createFactureExistingCommande(int id);
 }

@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 public class ControlleurFacture {
@@ -27,7 +26,7 @@ public class ControlleurFacture {
         public ResponseEntity<?> getAllFacture(){
             List<Facture> listFacture = factureService.findAll();
             if (listFacture.isEmpty()) {
-                return ResponseEntity.ok("Il n'y a aucune Facture");
+                return ResponseEntity.ok("Il n'y à aucune Facture");
             }
             return ResponseEntity.ok(listFacture);
         }
@@ -43,36 +42,38 @@ public class ControlleurFacture {
         }
     }
 
-    @PostMapping("/factures/commandes")
-    public ResponseEntity<?> createFacture(@RequestBody Commande commande) {
+    @PostMapping("/add-factures/commande/{id}")
+    public ResponseEntity<?> createFactureForCommande(@PathVariable int id) {
         try {
-            Facture facture = factureService.createFactureExistingCommande(commande);
-            return  ResponseEntity.ok("Creation de la Facture "+facture.getId()+ " a bien ete enregistrer dans la commande numero "
-                    +commande.getId());
+            Facture facture = factureService.createFactureExistingCommande(id);
+            return  ResponseEntity.ok("Facture No " + facture.getId() + " à bien été enregistrée dans la " +
+                    "commande No " + id);
 
-        } catch (Exception e) {
-            throw new RuntimeException(e);
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
 
     }
+    @PutMapping("/updatefacture/{id}")
+    public ResponseEntity<?> updateFactureById(@PathVariable int id, @RequestBody Facture facture)
+    {
+        if(facture == null){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Veuillez fournir les modifications");
 
+        }else{
+            try {
+                Facture facture1 = factureService.updateFacture(id, facture);
+                if(facture1 !=null){
+                    return ResponseEntity.ok(facture1);
+                }else {
+                    return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Facture No "+id+" introuvable");
+                }
+            }catch (Exception e){
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+            }
+        }
 
-
-//    @PostMapping("/facturest")
-//    public ResponseEntity<Facture> createFacture2(@RequestBody Commande commande) {
-//        try {
-//
-//            Facture savedFacture = new Facture();
-//            savedFacture.setCommande(commande);
-//                    factureService.saveFacture(savedFacture);
-//            return ResponseEntity.ok(savedFacture);
-//        } catch (IllegalArgumentException e) {
-//            return ResponseEntity.badRequest().body(null);
-//        } catch (Exception e) {
-//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
-//        }
-//    }
-
+    }
 
     @DeleteMapping("delFacture/{id}")
     public ResponseEntity<?> deleteFactureById(@PathVariable int id)  {
@@ -90,26 +91,6 @@ public class ControlleurFacture {
     }
 
 
-    @PutMapping("/updatefacture/{id}")
-    public ResponseEntity<?> updateFactureById(@PathVariable int id, @RequestBody Facture facture)
-    {
-        if(facture == null){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Veuillez fourner les modification");
-
-        }else{
-            try {
-                Facture facture1 = factureService.updateFacture(id, facture);
-                if(facture1 !=null){
-                    return ResponseEntity.ok(facture1);
-                }else {
-                    return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Facture avec Id: "+id+" introuvable");
-                }
-            }catch (Exception e){
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Facture non modifier!");
-            }
-        }
-
-    }
 }
 
 

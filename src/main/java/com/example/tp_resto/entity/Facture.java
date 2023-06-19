@@ -1,6 +1,7 @@
 package com.example.tp_resto.entity;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 
@@ -10,6 +11,7 @@ import java.util.Objects;
 @JsonIdentityInfo(
         generator = ObjectIdGenerators.PropertyGenerator.class,
         property = "id")
+@JsonPropertyOrder({ "id", "status", "billTime", "prixTotal", "commande" })
 @Entity
 public class Facture {
 
@@ -31,7 +33,7 @@ public class Facture {
         this.billTime = billTime.truncatedTo(ChronoUnit.SECONDS);
     }
 
-    public Facture(int id, Commande commande, double amount, boolean status, LocalDateTime billTime) {
+    public Facture(int id, Commande commande, boolean status, LocalDateTime billTime) {
         this.id = id;
         this.commande = commande;
         this.status = status;
@@ -69,6 +71,14 @@ public class Facture {
     public void setBillTime(LocalDateTime billTime) {
         this.billTime = billTime != null ? billTime.truncatedTo(ChronoUnit.SECONDS) : null;
     }
+    public double getPrixTotal(){
+        double total = 0;
+        Commande commande = this.getCommande();
+        for(CommandeItem food : commande.getOrderItems()){
+            total += food.getMenuItem().getPrice();
+        }
+        return total;
+    }
 
     @Override
     public String toString() {
@@ -80,14 +90,6 @@ public class Facture {
                 '}';
     }
 
-    public double getPrixTotal(){
-        double total = 0;
-        Commande commande = this.getCommande();
-        for(CommandeItem food : commande.getOrderItems()){
-            total += food.getMenuItem().getPrice();
-        }
-        return total;
-    }
 
     @Override
     public boolean equals(Object o) {

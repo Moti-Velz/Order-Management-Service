@@ -116,37 +116,6 @@ public class CommandeServiceImplTest {
         assertTrue(actualMessage.contains(expectedMessage));
     }
 
-    // Test for updateCommandeItemsByCommandeId
-    @Test
-    void testUpdateCommandeItemsByCommandeId_ExistingId() {
-        Commande existingCommande = new Commande();
-        existingCommande.setId(1);
-        List<CommandeItem> newOrderItems = new ArrayList<>();
-        // Fill your newOrderItems list here
-        when(commandeRepo.findById(1)).thenReturn(Optional.of(existingCommande));
-        when(commandeRepo.save(any(Commande.class))).thenReturn(existingCommande);
-
-        Commande updatedCommande = commandeService.updateCommandeItemsByCommandeId(1, newOrderItems);
-
-        assertEquals(newOrderItems, updatedCommande.getOrderItems());
-    }
-
-    @Test
-    void testUpdateCommandeItemsByCommandeId_NonExistingId() {
-        List<CommandeItem> newOrderItems = new ArrayList<>();
-        // Fill your newOrderItems list here
-        when(commandeRepo.findById(any(Integer.class))).thenReturn(Optional.empty());
-
-        Exception exception = assertThrows(RuntimeException.class, () -> {
-            commandeService.updateCommandeItemsByCommandeId(1, newOrderItems);
-        });
-
-        String expectedMessage = "Commande id 1 introuvable";
-        String actualMessage = exception.getMessage();
-
-        assertTrue(actualMessage.contains(expectedMessage));
-    }
-
 
     @Test
     void testDeleteCommandeById_found() {

@@ -61,7 +61,7 @@ public class FactureServiceImpl implements FactureService {
         List<Facture> maListe = factureRepo.findAll();
         if(maListe.isEmpty()) {
             throw new FactureNotFoundException("Aucune factures trouvées");
-        } else  return maListe;
+        } else return maListe;
     }
 
 
@@ -71,7 +71,14 @@ public class FactureServiceImpl implements FactureService {
         return factureRepo.findByBillTime(date);
     }
 
-    //Update
+    /**
+     * ici on veut verifier qu'on ne lie pas plus d'une facture a la meme commande
+     * On veut egalement verifier si la commande possede deja une facture sinon on lance une exception
+     * A terminer
+     * @param id
+     * @param facture
+     * @return
+     */
     @Override
     public Facture updateFacture(int id, Facture facture) {
 
@@ -80,16 +87,12 @@ public class FactureServiceImpl implements FactureService {
         if (factureOptional.isPresent()) {
             Facture existingFacture = factureOptional.get();
 
-            //On verifie si on essaie de changer l'assignation a une commandes différente
-            boolean facturesAssignesADesCommandesDifferentes = !existingFacture.getCommande().getId()
-                    .equals(facture.getCommande().getId());
+            if(existingFacture.getCommande() != null) {
+                Optional<Commande> commandeOpt = commandeRepository.findByFacture_Id(facture.getId());
+                if(commandeOpt.isPresent()) {
+                    commandeOpt.get().setFactureBidirection(existingFacture);
+                }
 
-
-            boolean factureEstDejaAssigneAUneCommande = factureRepo.existsByCommandeId(facture.getCommande().getId());
-
-            if (factureEstDejaAssigneAUneCommande && facturesAssignesADesCommandesDifferentes) {
-                throw new IllegalArgumentException("Facture reliée avec commande ID " + facture.getCommande().getId()
-                        + " existe déja.");
             }
 
                 Commande commande = facture.getCommande();
@@ -129,12 +132,18 @@ public class FactureServiceImpl implements FactureService {
     }
 
     @Override
-    public Facture createFactureExistingCommande(Commande commande) {
-        commandeRepository.findById(commande.getId());
+    public Facture createFactureExistingCommande(int id) {
+        Optional<Commande> commandeOpt = commandeRepository.findById(id);
         Facture facture = new Facture();
+
+        if(commandeOpt.isPresent()) {
         facture.setStatus(false);
+        Commande commande = commandeOpt.get();
+
         commande.setFactureBidirection(facture);
         commandeRepository.save(commande);
-        return facture;
+
+        return factureRepo.findFactureByCommande_Id(id).get();
+        } else throw new RuntimeException("Impossible d'associer une facture. Commande Introuvable");
     }
 }
