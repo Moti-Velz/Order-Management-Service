@@ -56,7 +56,7 @@ public class ControlleurMenuItem {
     //Faire la logique d'exception en fonction du type d'exception (not found / doublon)
     //fonctionne
     @PutMapping("/menuitems/{id}")
-    public ResponseEntity<?> updateMenuItem(@PathVariable int id, @RequestBody MenuItem menuItem){
+    public ResponseEntity<?> updateMenuItem(@PathVariable int id, @RequestBody MenuItem menuItem) {
 
         try {
         MenuItem newMenuItem = menuItemService.updateMenuItemById(id, menuItem);

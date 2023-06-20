@@ -35,9 +35,8 @@ public class CommandeServiceImpl implements CommandeService {
     @Override
     public Optional<Commande> getById(int id) {
         Optional<Commande> commandeOptional = commandeRepository.findById(id);
-        Commande commande = null;
         if(!commandeOptional.isPresent()) {
-            throw new RuntimeException("Commande id " + id + " introuvable");
+            throw new RuntimeException("Commande No " + id + " introuvable");
         }
         return commandeOptional;
     }

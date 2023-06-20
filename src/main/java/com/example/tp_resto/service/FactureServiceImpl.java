@@ -30,8 +30,8 @@ public class FactureServiceImpl implements FactureService {
     public Facture saveFacture(Facture facture) {
         // Check if a Facture with the same commandeId already exists
         if (factureRepo.existsByCommandeId(facture.getCommande().getId())) {
-            throw new IllegalArgumentException("Facture with commande ID "
-                    + facture.getCommande().getId() + " already exists.");
+            throw new IllegalArgumentException("Une facture associée à la commande No "
+                    + facture.getCommande().getId() + " existe déjà.");
         }
         return factureRepo.save(facture);
     }
@@ -66,15 +66,15 @@ public class FactureServiceImpl implements FactureService {
 
 
     @Override
-    public List<Facture> findByDate(LocalDateTime date) { //TODO
+    public List<Facture> findByDate(LocalDateTime date) {
 
         return factureRepo.findByBillTime(date);
     }
 
     /**
      * ici on veut verifier qu'on ne lie pas plus d'une facture a la meme commande
-     * On veut egalement verifier si la commande possede deja une facture sinon on lance une exception
-     * A terminer
+     On ne peut pas modifier la commande assignée à une facture
+     *
      * @param id
      * @param facture
      * @return
@@ -82,29 +82,21 @@ public class FactureServiceImpl implements FactureService {
     @Override
     public Facture updateFacture(int id, Facture facture) {
 
+        //On verifie qu'une facture est deja dans la BD pour ce ID
         Optional<Facture> factureOptional = factureRepo.findById(id);
 
-        if (factureOptional.isPresent()) {
+        //Si oui -> on la récupère
+        //Si non -> lance une exception
+        if (factureOptional.isEmpty()) {
+            throw new FactureNotFoundException("Facture No " + id + " Non Trouvée");
+        } else {
             Facture existingFacture = factureOptional.get();
-
-            if(existingFacture.getCommande() != null) {
-                Optional<Commande> commandeOpt = commandeRepository.findByFacture_Id(facture.getId());
-                if(commandeOpt.isPresent()) {
-                    commandeOpt.get().setFactureBidirection(existingFacture);
-                }
-
-            }
-
-                Commande commande = facture.getCommande();
-                commande.setFactureBidirection(facture);
-                existingFacture.setStatus(facture.getStatus());
-                existingFacture.setBillTime(facture.getBillTime());
+            existingFacture.setStatus(facture.getStatus());
+            existingFacture.setBillTime(facture.getBillTime());
 
                 return factureRepo.save(existingFacture);
-            } else {
-                throw new FactureNotFoundException("Facture No " + id + " Not Found");
             }
-        }
+    }
 
     //condition de doublons
     @Transactional
@@ -122,12 +114,9 @@ public class FactureServiceImpl implements FactureService {
                 }
             }
             factureRepo.deleteById(id);
-            System.out.println("Facture with ID " + id + " deleted successfully");
-
             return true;
-
         } else {
-            throw new FactureNotFoundException(" Facture No " + id + " Not Found");
+            throw new FactureNotFoundException("Facture No " + id + " Introuvable");
         }
     }
 

@@ -44,6 +44,7 @@ public class ControlleurCommandeItem {
                 ("CommandeItem No" + commandeItemId + " Introuvable"));
 
         commandeItem.setQuantity(commandeItemDetails.getQuantity());
+        commandeItem.setMenuItem(commandeItemDetails.getMenuItem());
         return commandeItemService.save(commandeItem);
     }
 
