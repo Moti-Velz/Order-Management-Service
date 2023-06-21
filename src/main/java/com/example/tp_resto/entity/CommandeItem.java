@@ -2,7 +2,7 @@ package com.example.tp_resto.entity;
 
 import com.fasterxml.jackson.annotation.*;
 import jakarta.persistence.*;
-import org.antlr.v4.runtime.misc.NotNull;
+
 
 
 /**

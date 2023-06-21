@@ -4,7 +4,6 @@ import com.example.tp_resto.entity.Commande;
 import com.example.tp_resto.entity.CommandeItem;
 import com.example.tp_resto.service.CommandeItemService;
 import com.example.tp_resto.service.CommandeService;
-import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,19 +26,19 @@ public class ControlleurCommande {
         this.itemService = itemService;
     }
 
-    @GetMapping("/commandes")
+    @GetMapping("/commandes/getAll")
     public ResponseEntity<?> getAllCommandes() {
             List<Commande> list = commandeService.getAll();
             if( list == null) {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Commandes Introuvables");
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Les Commandes sont Introuvables");
             }
             if (list.isEmpty()) {
-                return ResponseEntity.status(200).body("Aucune commandes présentes");
+                return ResponseEntity.status(200).body("Il y a Aucune commandes présentes a présenter");
             }
         return ResponseEntity.status(HttpStatus.FOUND).body(list);
     }
 
-    @GetMapping("/commandes/{id}")
+    @GetMapping("/commandes/get/{id}")
     public ResponseEntity<?> getCommandeById(@PathVariable int id) {
         Optional<Commande> commande = null;
         try {
@@ -50,11 +49,11 @@ public class ControlleurCommande {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Commande No " + id + " Introuvable");
             }
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Commande No " + id + " Non Supprimée");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Il y a une erreur avec votre Requête, nous ne pouvons poursuivre votre demande.");
         }
     }
 
-    @PostMapping("/commandes/{commandeId}")
+    @PostMapping("/commandes/add/{commandeId}")
     public Optional<Commande> addMenuItemToCommande(@PathVariable int commandeId, @RequestBody CommandeItem commandeItem) {
 
         try {
@@ -74,7 +73,7 @@ public class ControlleurCommande {
     }
 
     //Voir ce qu'on peut faire pour retourner le JSON avec les infos de MenuItem
-    @PostMapping("/creation-commande")
+    @PostMapping("/commandes/add")
     public Optional<Commande> createCommandeWithItems(@RequestBody List<CommandeItem> listeCommandeItem) {
 
         try {
@@ -93,26 +92,26 @@ public class ControlleurCommande {
         }
     }
 
-    @PutMapping("/commandes/{id}")
+    @PutMapping("/commandes/update/{id}")
     public ResponseEntity<?> updateCommandeById(@PathVariable int id, @RequestBody Commande updatedCommande) {
 
         if (updatedCommande == null) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Tous les champs sont obligatoires");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Tous les champs sont obligatoires pour poursuivre a la modification");
         } else {
             try {
                 Commande commande = commandeService.updateCommandeById(id, updatedCommande);
                 if (commande != null) {
                     return ResponseEntity.ok(commande);
                 } else {
-                    return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Commande non trouvée");
+                    return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Commande non trouvée, impossible de la modifier.");
                 }
             } catch (Exception e) {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Commande Non Modifiée.");
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Une erreur est subvenue, la Commande ne sera pas Modifiée.");
             }
         }
     }
 
-    @DeleteMapping("/commandes/{id}")
+    @DeleteMapping("/commandes/del/{id}")
     public ResponseEntity<?> deleteCommandeById(@PathVariable int id) {
         try {
             boolean isDeleted = commandeService.deleteCommandeById(id);

@@ -3,7 +3,6 @@ import com.example.tp_resto.entity.MenuItem;
 
 import com.example.tp_resto.exception.MenuItemNotFoundException;
 import com.example.tp_resto.service.MenuItemService;
-import org.apache.coyote.http2.Http2OutputBuffer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -42,7 +41,7 @@ public class ControlleurMenuItem {
         }
     }
 
-    @PostMapping("/menuitems")
+    @PostMapping("/menuitems/add")
     public ResponseEntity<?> addMenuItem(@RequestBody MenuItem newMenuItem) {
         MenuItem menuItem = null;
         try {
@@ -55,7 +54,7 @@ public class ControlleurMenuItem {
 
     //Faire la logique d'exception en fonction du type d'exception (not found / doublon)
     //fonctionne
-    @PutMapping("/menuitems/{id}")
+    @PutMapping("/menuitems/update/{id}")
     public ResponseEntity<?> updateMenuItem(@PathVariable int id, @RequestBody MenuItem menuItem) {
 
         try {
@@ -69,7 +68,7 @@ public class ControlleurMenuItem {
 
     //on ne devrait pas supprimer l'item du menu s'il existe des facture en memoire avec des item de commande correspondant.
     //A changer
-    @DeleteMapping("/menuitems/{id}")
+    @DeleteMapping("/menuitems/del/{id}")
     public ResponseEntity <String> deleteMenuItemById(@PathVariable int id) {
         try {
             boolean deleted = menuItemService.deleteMenuItemById(id);

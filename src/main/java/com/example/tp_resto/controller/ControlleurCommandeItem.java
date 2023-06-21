@@ -5,7 +5,6 @@ import com.example.tp_resto.entity.Commande;
 import com.example.tp_resto.entity.CommandeItem;
 import com.example.tp_resto.service.CommandeItemService;
 import com.example.tp_resto.service.CommandeService;
-import com.example.tp_resto.service.MenuItemService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -29,7 +28,7 @@ public class ControlleurCommandeItem {
         return commandeItemService.findAll();
     }
 
-    @GetMapping("/commandes/{commandeId}")
+    @GetMapping("/getcommandes/{commandeId}")
     public List<CommandeItem> getCommandeItemsByCommande(@PathVariable int commandeId) {
         Commande commande = commandeService.getById(commandeId).orElseThrow(() -> new RuntimeException
                 ("Commande No" + commandeId + " Introuvable"));
@@ -37,7 +36,7 @@ public class ControlleurCommandeItem {
         return commandeItemService.findByCommande(commande);
     }
 
-    @PutMapping("/{commandeItemId}")
+    @PutMapping("/update/{commandeItemId}")
     public CommandeItem updateCommandeItem(@PathVariable int commandeItemId,
                                            @RequestBody CommandeItem commandeItemDetails) {
         CommandeItem commandeItem = commandeItemService.findById(commandeItemId).orElseThrow(() -> new RuntimeException
@@ -48,7 +47,7 @@ public class ControlleurCommandeItem {
         return commandeItemService.save(commandeItem);
     }
 
-    @DeleteMapping("/{commandeItemId}")
+    @DeleteMapping("/del/{commandeItemId}")
     public ResponseEntity<?> deleteCommandeItem(@PathVariable(value = "commandeItemId") int commandeItemId) {
         CommandeItem commandeItem = commandeItemService.findById(commandeItemId).orElseThrow(() -> new RuntimeException
                 ("CommandeItem No" + commandeItemId + " Introuvable"));
