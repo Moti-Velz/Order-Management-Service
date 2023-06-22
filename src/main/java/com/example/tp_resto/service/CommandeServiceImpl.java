@@ -16,13 +16,13 @@ import java.util.Optional;
 public class CommandeServiceImpl implements CommandeService {
 
     private ICommandeRepo commandeRepository;
-    private CommandeItemService commandeItemService;
+    //private CommandeItemService commandeItemService;
     private IFactureRepo factureRepository;
 
     @Autowired
-    public CommandeServiceImpl(ICommandeRepo commandeRepository, CommandeItemService commandeItemService, IFactureRepo factureRepository) {
+    public CommandeServiceImpl(ICommandeRepo commandeRepository, IFactureRepo factureRepository) { //CommandeItemService commandeItemService,
         this.commandeRepository = commandeRepository;
-        this.commandeItemService = commandeItemService;
+        //this.commandeItemService = commandeItemService;
         this.factureRepository = factureRepository;
     }
 
@@ -91,6 +91,10 @@ public class CommandeServiceImpl implements CommandeService {
             }
         } return 0;
     }
+
+//    public Commande updateCommandeItemsByCommandeId(int i, List<CommandeItem> newOrderItems) {
+//        return null;
+//    }
 }
 
 

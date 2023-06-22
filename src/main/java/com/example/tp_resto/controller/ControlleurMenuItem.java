@@ -3,7 +3,6 @@ import com.example.tp_resto.entity.MenuItem;
 
 import com.example.tp_resto.exception.MenuItemNotFoundException;
 import com.example.tp_resto.service.MenuItemService;
-import org.apache.coyote.http2.Http2OutputBuffer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,18 +10,29 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
-
+/**
+ * Cette classe est un contrôleur REST pour les opérations liées aux éléments de menu.
+ */
 @RestController
 public class ControlleurMenuItem {
 
     private final MenuItemService menuItemService;
 
+    /**
+     * Constructeur de la classe ControlleurMenuItem.
+     *
+     * @param menuItemService Le service de gestion des éléments de menu.
+     */
     @Autowired
     public ControlleurMenuItem(MenuItemService menuItemService){
         this.menuItemService = menuItemService;
     }
 
-
+    /**
+     * Récupère tous les éléments de menu.
+     *
+     * @return ResponseEntity contenant la liste des éléments de menu ou un message indiquant l'absence d'éléments de menu.
+     */
     @GetMapping("/menuitems")
     public ResponseEntity<?> getAllMenuItems(){
         List<MenuItem> List = menuItemService.findAll();
@@ -32,6 +42,12 @@ public class ControlleurMenuItem {
         return ResponseEntity.ok(List);
     }
 
+    /**
+     * Récupère un élément de menu par son ID.
+     *
+     * @param id L'ID de l'élément de menu à récupérer.
+     * @return L'élément de menu correspondant ou une exception si l'élément de menu n'est pas trouvé.
+     */
     //L'exception est lancée au niveau du service implémenté
     @GetMapping("/menuitems/{id}")
     public MenuItem getMenuItemById(@PathVariable int id){
@@ -42,7 +58,13 @@ public class ControlleurMenuItem {
         }
     }
 
-    @PostMapping("/menuitems")
+    /**
+     * Ajoute un nouvel élément de menu.
+     *
+     * @param newMenuItem Le nouvel élément de menu à ajouter.
+     * @return ResponseEntity indiquant le succès ou l'échec de l'ajout de l'élément de menu.
+     */
+    @PostMapping("/menuitems/add")
     public ResponseEntity<?> addMenuItem(@RequestBody MenuItem newMenuItem) {
         MenuItem menuItem = null;
         try {
@@ -53,9 +75,14 @@ public class ControlleurMenuItem {
         return ResponseEntity.status(HttpStatus.CREATED).body(menuItem.getName() + " créée");
     }
 
-    //Faire la logique d'exception en fonction du type d'exception (not found / doublon)
-    //fonctionne
-    @PutMapping("/menuitems/{id}")
+    /**
+     * Met à jour un élément de menu existant.
+     *
+     * @param id       L'ID de l'élément de menu à mettre à jour.
+     * @param menuItem Les détails de l'élément de menu mis à jour.
+     * @return ResponseEntity contenant le message de succès ou une exception si la mise à jour échoue.
+     */
+    @PutMapping("/menuitems/update/{id}")
     public ResponseEntity<?> updateMenuItem(@PathVariable int id, @RequestBody MenuItem menuItem) {
 
         try {
@@ -67,9 +94,13 @@ public class ControlleurMenuItem {
         }
     }
 
-    //on ne devrait pas supprimer l'item du menu s'il existe des facture en memoire avec des item de commande correspondant.
-    //A changer
-    @DeleteMapping("/menuitems/{id}")
+    /**
+     * Supprime un élément de menu par son ID.
+     *
+     * @param id L'ID de l'élément de menu à supprimer.
+     * @return ResponseEntity indiquant le succès ou l'échec de la suppression de l'élément de menu.
+     */
+    @DeleteMapping("/menuitems/del/{id}")
     public ResponseEntity <String> deleteMenuItemById(@PathVariable int id) {
         try {
             boolean deleted = menuItemService.deleteMenuItemById(id);

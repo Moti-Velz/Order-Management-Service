@@ -5,13 +5,15 @@ import com.example.tp_resto.entity.Commande;
 import com.example.tp_resto.entity.CommandeItem;
 import com.example.tp_resto.service.CommandeItemService;
 import com.example.tp_resto.service.CommandeService;
-import com.example.tp_resto.service.MenuItemService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+/**
+ * Cette classe est un contrôleur REST pour les opérations liées aux éléments de commande.
+ */
 @RestController
 @RequestMapping("/commande-items")
 public class ControlleurCommandeItem {
@@ -19,17 +21,35 @@ public class ControlleurCommandeItem {
     private final CommandeItemService commandeItemService;
     private final CommandeService commandeService;
 
+    /**
+     * Constructeur de la classe ControlleurCommandeItem.
+     *
+     * @param commandeItemService Le service de gestion des éléments de commande.
+     * @param commandeService     Le service de gestion des commandes.
+     */
     @Autowired
     public ControlleurCommandeItem(CommandeItemService commandeItemService, CommandeService commandeService) {
         this.commandeItemService = commandeItemService;
         this.commandeService = commandeService;
     }
+
+    /**
+     * Récupère tous les éléments de commande.
+     *
+     * @return Liste des éléments de commande.
+     */
     @GetMapping
     public List<CommandeItem> getAllCommandeItems() {
         return commandeItemService.findAll();
     }
 
-    @GetMapping("/commandes/{commandeId}")
+    /**
+     * Récupère les éléments de commande d'une commande spécifique.
+     *
+     * @param commandeId L'ID de la commande.
+     * @return Liste des éléments de commande de la commande spécifiée.
+     */
+    @GetMapping("/getcommandes/{commandeId}")
     public List<CommandeItem> getCommandeItemsByCommande(@PathVariable int commandeId) {
         Commande commande = commandeService.getById(commandeId).orElseThrow(() -> new RuntimeException
                 ("Commande No" + commandeId + " Introuvable"));
@@ -37,7 +57,14 @@ public class ControlleurCommandeItem {
         return commandeItemService.findByCommande(commande);
     }
 
-    @PutMapping("/{commandeItemId}")
+    /**
+     * Met à jour un élément de commande.
+     *
+     * @param commandeItemId     L'ID de l'élément de commande à mettre à jour.
+     * @param commandeItemDetails Les détails de l'élément de commande mis à jour.
+     * @return L'élément de commande mis à jour.
+     */
+    @PutMapping("/update/{commandeItemId}")
     public CommandeItem updateCommandeItem(@PathVariable int commandeItemId,
                                            @RequestBody CommandeItem commandeItemDetails) {
         CommandeItem commandeItem = commandeItemService.findById(commandeItemId).orElseThrow(() -> new RuntimeException
@@ -48,7 +75,13 @@ public class ControlleurCommandeItem {
         return commandeItemService.save(commandeItem);
     }
 
-    @DeleteMapping("/{commandeItemId}")
+    /**
+     * Supprime un élément de commande.
+     *
+     * @param commandeItemId L'ID de l'élément de commande à supprimer.
+     * @return ResponseEntity indiquant le succès ou l'échec de la suppression.
+     */
+    @DeleteMapping("/del/{commandeItemId}")
     public ResponseEntity<?> deleteCommandeItem(@PathVariable(value = "commandeItemId") int commandeItemId) {
         CommandeItem commandeItem = commandeItemService.findById(commandeItemId).orElseThrow(() -> new RuntimeException
                 ("CommandeItem No" + commandeItemId + " Introuvable"));

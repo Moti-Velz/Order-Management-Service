@@ -11,5 +11,4 @@ public interface IMenuItem extends JpaRepository<MenuItem, Integer> {
     MenuItem findByNameIgnoreCase(String name);
     Optional <MenuItem> findMenuItemByName(String name);
 
-    boolean existsByName(String name);
 }

@@ -9,6 +9,10 @@ import jakarta.persistence.*;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.Objects;
+
+/**
+ * Cette classe représente une facture.
+ */
 @JsonIdentityInfo(
         generator = ObjectIdGenerators.PropertyGenerator.class,
         property = "id")
@@ -26,17 +30,32 @@ public class Facture {
     @Column(columnDefinition = "DATETIME")
     private LocalDateTime billTime;
 
-    @Transient//indique a hibernate de ne pas persister cette valeur dans la DB
-    private double prixTotal;
-
+    /**
+     * Constructeur par défaut de la classe Facture.
+     * Initialise le temps de facturation à l'instant actuel.
+     */
     public Facture() {
         billTime = LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS);
     }
+
+    /**
+     * Constructeur de la classe Facture avec le temps de facturation spécifié.
+     *
+     * @param billTime Le temps de facturation.
+     */
 
     public Facture(LocalDateTime billTime) {
         this.billTime = billTime.truncatedTo(ChronoUnit.SECONDS);
     }
 
+    /**
+     * Constructeur de la classe Facture avec les paramètres spécifiés.
+     *
+     * @param id       L'ID de la facture.
+     * @param commande La commande associée à la facture.
+     * @param status   Le statut de la facture.
+     * @param billTime Le temps de facturation.
+     */
     public Facture(int id, Commande commande, boolean status, LocalDateTime billTime) {
         this.id = id;
         this.commande = commande;
@@ -62,10 +81,20 @@ public class Facture {
         this.id = id;
     }
 
+    /**
+     * Récupère la commande associée à la facture.
+     *
+     * @return La commande associée à la facture.
+     */
     public Commande getCommande() {
         return commande;
     }
 
+    /**
+     * Définit la commande associée à la facture.
+     *
+     * @param commande La commande associée à la facture.
+     */
     public void setCommande(Commande commande) {
         this.commande = commande;
     }
@@ -78,10 +107,20 @@ public class Facture {
         this.status = status;
     }
 
+    /**
+     * Récupère le temps de facturation.
+     *
+     * @return Le temps de facturation.
+     */
     public LocalDateTime getBillTime() {
         return billTime;
     }
 
+    /**
+     * Définit le temps de facturation.
+     *
+     * @param billTime Le temps de facturation.
+     */
     public void setBillTime(LocalDateTime billTime) {
         this.billTime = billTime != null ? billTime.truncatedTo(ChronoUnit.SECONDS) : null;
     }
