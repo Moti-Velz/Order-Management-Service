@@ -1,5 +1,6 @@
 package com.example.tp_resto.entity;
 
+import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
@@ -25,6 +26,9 @@ public class Facture {
     @Column(columnDefinition = "DATETIME")
     private LocalDateTime billTime;
 
+    @Transient//indique a hibernate de ne pas persister cette valeur dans la DB
+    private double prixTotal;
+
     public Facture() {
         billTime = LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS);
     }
@@ -38,6 +42,16 @@ public class Facture {
         this.commande = commande;
         this.status = status;
         this.billTime = billTime;
+        calculatePrixTotal();
+    }
+
+    @JsonGetter("prixTotal")
+    private String calculatePrixTotal() {
+        double total = 0;
+        for(CommandeItem item : this.commande.getOrderItems()) {
+            total += item.getQuantity() * item.getMenuItem().getPrice();
+        }
+        return String.format("%.2f", total);
     }
 
     public int getId() {
@@ -70,14 +84,6 @@ public class Facture {
 
     public void setBillTime(LocalDateTime billTime) {
         this.billTime = billTime != null ? billTime.truncatedTo(ChronoUnit.SECONDS) : null;
-    }
-    public double getPrixTotal(){
-        double total = 0;
-        Commande commande = this.getCommande();
-        for(CommandeItem food : commande.getOrderItems()){
-            total += food.getMenuItem().getPrice();
-        }
-        return total;
     }
 
     @Override
