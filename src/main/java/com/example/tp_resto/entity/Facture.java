@@ -51,13 +51,11 @@ public class Facture {
     /**
      * Constructeur de la classe Facture avec les paramètres spécifiés.
      *
-     * @param id       L'ID de la facture.
      * @param commande La commande associée à la facture.
      * @param status   Le statut de la facture.
      * @param billTime Le temps de facturation.
      */
-    public Facture(int id, Commande commande, boolean status, LocalDateTime billTime) {
-        this.id = id;
+    public Facture(Commande commande, boolean status, LocalDateTime billTime) {
         this.commande = commande;
         this.status = status;
         this.billTime = billTime;
