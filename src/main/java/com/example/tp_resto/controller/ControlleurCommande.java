@@ -14,18 +14,32 @@ import org.springframework.web.server.ResponseStatusException;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Cette classe est un contrôleur REST pour les opérations liées aux commandes.
+ */
 @RestController
 public class ControlleurCommande {
 //servir a starter la commande, add, gestion ect
     private final CommandeService commandeService;
     private final CommandeItemService itemService;
 
+    /**
+     * Constructeur de la classe ControlleurCommande.
+     *
+     * @param commandeService Le service de gestion des commandes.
+     * @param itemService     Le service de gestion des articles de commande.
+     */
     @Autowired
     public ControlleurCommande(CommandeService commandeService, CommandeItemService itemService) {
         this.commandeService = commandeService;
         this.itemService = itemService;
     }
 
+    /**
+     * Récupère toutes les commandes.
+     *
+     * @return ResponseEntity contenant la liste des commandes ou un message d'erreur.
+     */
     @GetMapping("/commandes/getAll")
     public ResponseEntity<?> getAllCommandes() {
             List<Commande> list = commandeService.getAll();
@@ -37,7 +51,12 @@ public class ControlleurCommande {
             }
         return ResponseEntity.status(HttpStatus.FOUND).body(list);
     }
-
+    /**
+     * Récupère une commande par son ID.
+     *
+     * @param id L'ID de la commande à récupérer.
+     * @return ResponseEntity contenant la commande trouvée ou un message d'erreur.
+     */
     @GetMapping("/commandes/get/{id}")
     public ResponseEntity<?> getCommandeById(@PathVariable int id) {
         Optional<Commande> commande = null;
@@ -53,6 +72,13 @@ public class ControlleurCommande {
         }
     }
 
+    /**
+     * Ajoute un élément de commandeItem à une commande existante.
+     *
+     * @param commandeId  L'ID de la commande à laquelle ajouter l'élément.
+     * @param commandeItem L'élément de menuItem à ajouter.
+     * @return La commande mise à jour contenant l'élément ajouté, ou une exception en cas d'erreur.
+     */
     @PostMapping("/commandes/add/{commandeId}")
     public Optional<Commande> addMenuItemToCommande(@PathVariable int commandeId, @RequestBody CommandeItem commandeItem) {
 
@@ -72,7 +98,12 @@ public class ControlleurCommande {
         }
     }
 
-    //Voir ce qu'on peut faire pour retourner le JSON avec les infos de MenuItem
+    /**
+     * Crée une nouvelle commande avec une liste d'éléments de commande.
+     *
+     * @param listeCommandeItem La liste des éléments de menuItem à ajouter.
+     * @return La nouvelle commande créée avec les éléments ajoutés, ou une exception en cas d'erreur.
+     */
     @PostMapping("/commandes/add")
     public Optional<Commande> createCommandeWithItems(@RequestBody List<CommandeItem> listeCommandeItem) {
 
@@ -92,6 +123,13 @@ public class ControlleurCommande {
         }
     }
 
+    /**
+     * Met à jour une commande existante.
+     *
+     * @param id L'ID de la commande à mettre à jour.
+     * @param updatedCommande La commande mise à jour avec les nouveaux parametre fournis par l'utilisateur.
+     * @return ResponseEntity contenant la commande mise à jour ou un message d'erreur.
+     */
     @PutMapping("/commandes/update/{id}")
     public ResponseEntity<?> updateCommandeById(@PathVariable int id, @RequestBody Commande updatedCommande) {
 
@@ -110,7 +148,12 @@ public class ControlleurCommande {
             }
         }
     }
-
+    /**
+     * Supprime une commande par son ID.
+     *
+     * @param id L'ID de la commande à supprimer.
+     * @return ResponseEntity indiquant le succès ou l'échec de la suppression.
+     */
     @DeleteMapping("/commandes/del/{id}")
     public ResponseEntity<?> deleteCommandeById(@PathVariable int id) {
         try {

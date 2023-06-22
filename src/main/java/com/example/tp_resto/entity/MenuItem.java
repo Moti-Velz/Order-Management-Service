@@ -5,6 +5,10 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 
 import java.util.Objects;
+
+/**
+ * Cette classe représente un élément de menu.
+ */
 @JsonIdentityInfo(
         generator = ObjectIdGenerators.PropertyGenerator.class,
         property = "id")
@@ -20,9 +24,19 @@ public class MenuItem {
     private String description;
     private double price;
 
+    /**
+     * Constructeur par défaut de la classe MenuItem.
+     */
     public MenuItem() {
     }
 
+    /**
+     * Constructeur de la classe MenuItem avec les paramètres spécifiés.
+     *
+     * @param name        Le nom de l'élément de menu.
+     * @param description La description de l'élément de menu.
+     * @param price       Le prix de l'élément de menu.
+     */
     public MenuItem(String name, String description, double price) {
         this.name = name;
         this.description = description;

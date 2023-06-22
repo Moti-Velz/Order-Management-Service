@@ -42,26 +42,48 @@ public class Commande {
     @Column(columnDefinition = "DATETIME")
     private LocalDateTime orderTime;
 
+    /**
+     * Constructeur par défaut de la classe Commande.
+     * Initialise la date de commande à l'instant actuel.
+     */
     public Commande() {
         orderTime = LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS);
     }
 
+    /**
+     * Constructeur de la classe Commande avec la date de commande spécifiée.
+     *
+     * @param orderTime La date de commande.
+     */
     public Commande(LocalDateTime orderTime) {
         this.orderTime = orderTime.truncatedTo(ChronoUnit.SECONDS);
     }
 
 
+    /**
+     * Supprime la facture associée à la commande.
+     */
     public void removeFacture() {
         facture.setCommande(null);
         this.facture = null;
     }
+    /**
+     * Associe une facture à la commande de manière bidirectionnelle.
+     *
+     * @param facture La facture à associer.
+     */
     public void setFactureBidirection(Facture facture) {
         this.facture = facture;
         facture.setCommande(this);
     }
 
 
-
+    /**
+     * Ajoute un élément de commande à la commande.
+     * Si l'élément de commande existe déjà, incrémente la quantité.
+     *
+     * @param item L'élément de commande à ajouter.
+     */
     @Transactional
     public void addItem(CommandeItem item) {
         if(orderItems == null) {
@@ -76,11 +98,23 @@ public class Commande {
 
         }
     }
+    /**
+     * Vérifie si la commande contient un élément de menu spécifique.
+     *
+     * @param item L'élément de menu à rechercher.
+     * @return true si l'élément de menu est présent dans la commande, sinon false.
+     */
     public boolean hasItem(MenuItem item) {
         return this.orderItems.stream()
                 .anyMatch(i -> i.getMenuItem().equals(item));
     }
 
+    /**
+     * Incrémente la quantité d'un élément de menu existant dans la commande.
+     *
+     * @param item     L'élément de menu à incrémenter.
+     * @param quantity La quantité à ajouter.
+     */
     public void incrementItem(CommandeItem item, int quantity) {
         this.orderItems.stream()
                 .filter(i -> i.getMenuItem().equals(item.getMenuItem()))

@@ -8,16 +8,29 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import java.util.List;
 
+/**
+ * Cette classe est un contrôleur REST pour les opérations liées aux factures.
+ */
 @RestController
 public class ControlleurFacture {
 
     private FactureService factureService;
 
+    /**
+     * Constructeur de la classe ControlleurFacture.
+     *
+     * @param factureService Le service de gestion des factures.
+     */
     @Autowired
     public ControlleurFacture(FactureService factureService) {
         this.factureService = factureService;
     }
 
+    /**
+     * Récupère toutes les factures.
+     *
+     * @return ResponseEntity contenant la liste des factures ou un message indiquant l'absence de factures.
+     */
         @GetMapping("/facture")
         public ResponseEntity<?> getAllFacture(){
             List<Facture> listFacture = factureService.findAll();
@@ -28,7 +41,12 @@ public class ControlleurFacture {
         }
 
 
-
+    /**
+     * Récupère une facture par son ID.
+     *
+     * @param id L'ID de la facture à récupérer.
+     * @return La facture correspondante ou une exception si la facture n'est pas trouvée.
+     */
     @GetMapping("/facture/{id}")
     public Facture getFactureById(@PathVariable int id) {
         try {
@@ -38,6 +56,12 @@ public class ControlleurFacture {
         }
     }
 
+    /**
+     * Crée une facture pour une commande existante.
+     *
+     * @param id L'ID de la commande.
+     * @return ResponseEntity indiquant le succès ou l'échec de la création de la facture.
+     */
     @PostMapping("/add-factures/commande/{id}")
     public ResponseEntity<?> createFactureForCommande(@PathVariable int id) {
         try {
@@ -48,6 +72,14 @@ public class ControlleurFacture {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
+
+    /**
+     * Met à jour une facture existante.
+     *
+     * @param id      L'ID de la facture à mettre à jour.
+     * @param facture Les détails de la facture mise à jour.
+     * @return ResponseEntity contenant la facture mise à jour ou un message d'erreur.
+     */
     @PutMapping("/updatefacture/{id}")
     public ResponseEntity<?> updateFactureById(@PathVariable int id, @RequestBody Facture facture)
     {
@@ -67,6 +99,12 @@ public class ControlleurFacture {
         }
     }
 
+    /**
+     * Supprime une facture par son ID.
+     *
+     * @param id L'ID de la facture à supprimer.
+     * @return ResponseEntity indiquant le succès ou l'échec de la suppression de la facture.
+     */
     @DeleteMapping("delFacture/{id}")
     public ResponseEntity<?> deleteFactureById(@PathVariable int id)  {
         try {
