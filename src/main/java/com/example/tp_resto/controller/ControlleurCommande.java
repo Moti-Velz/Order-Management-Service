@@ -132,22 +132,22 @@ public class ControlleurCommande {
      */
     @PutMapping("/commandes/update/{id}")
     public ResponseEntity<?> updateCommandeById(@PathVariable int id, @RequestBody Commande updatedCommande) {
-
-        if (updatedCommande == null) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Tous les champs sont obligatoires pour poursuivre a la modification");
-        } else {
-            try {
-                Commande commande = commandeService.updateCommandeById(id, updatedCommande);
-                if (commande != null) {
-                    return ResponseEntity.ok(commande);
-                } else {
-                    return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Commande non trouvée, impossible de la modifier.");
-                }
-            } catch (Exception e) {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Une erreur est subvenue, la Commande ne sera pas Modifiée.");
+        try {
+            if(updatedCommande == null || updatedCommande.getOrderTime() == null || updatedCommande.getOrderItems().isEmpty()) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Tous les champs sont obligatoires pour poursuivre a la modification");
+            }else {
+                Commande commande = commandeService.updateCommandeById2(id, updatedCommande);
+                return ResponseEntity.ok(commande);
             }
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Commande non trouvée, impossible de la modifier.");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Une erreur est subvenue, la Commande ne sera pas Modifiée.");
         }
-    }
+        }
+
     /**
      * Supprime une commande par son ID.
      *

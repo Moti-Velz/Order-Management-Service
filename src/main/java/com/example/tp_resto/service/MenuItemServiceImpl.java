@@ -99,7 +99,10 @@ public class MenuItemServiceImpl implements MenuItemService{
      */
 
     @Override
-    public MenuItem updateMenuItemById(int id, MenuItem menuItem) {
+    public MenuItem updateMenuItemById(int id, MenuItem menuItem)throws IllegalArgumentException  {
+        if(menuItem == null || menuItem.getName() == null || menuItem.getName().isEmpty()) {
+            throw new IllegalArgumentException("Invalid MenuItem");
+        }
         Optional<MenuItem> optionalMenuItem = menuRepository.findById(id);
 
         if (optionalMenuItem.isPresent()) {

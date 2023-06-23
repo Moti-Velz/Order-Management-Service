@@ -49,4 +49,6 @@ public interface CommandeService {
      * @return true si la suppression a été effectuée avec succès, sinon false.
      */
     boolean deleteCommandeById(Integer id);
+
+    Commande updateCommandeById2(Integer id, Commande newCommande);
 }

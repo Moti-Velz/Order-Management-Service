@@ -85,12 +85,18 @@ public class ControlleurMenuItem {
     @PutMapping("/menuitems/update/{id}")
     public ResponseEntity<?> updateMenuItem(@PathVariable int id, @RequestBody MenuItem menuItem) {
 
-        try {
-        MenuItem newMenuItem = menuItemService.updateMenuItemById(id, menuItem);
-            return ResponseEntity.status(HttpStatus.CREATED).body(newMenuItem.getName() + " mis a jour");
 
+        try {
+            if(menuItem == null){
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Veuillez fournir les modifications");
+
+            }else {
+                MenuItem newMenuItem = menuItemService.updateMenuItemById(id, menuItem);
+                return ResponseEntity.status(HttpStatus.CREATED).body(newMenuItem.getName() + " mis a jour");
+
+            }
         } catch (Exception ex) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Impossible d'effectuer cette modification");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Impossible d'effectuer cette modification");
         }
     }
 

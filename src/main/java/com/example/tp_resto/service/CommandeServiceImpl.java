@@ -83,6 +83,43 @@ public class CommandeServiceImpl implements CommandeService {
     @Transactional
     @Override
     public Commande updateCommandeById(Integer id, Commande newCommande) {
+
+        Optional<Commande> optionalCommande = commandeRepository.findById(id);
+        Optional<Facture> optionalFacture = factureRepository.findFactureByCommande_Id(id);
+
+        if (optionalCommande.isPresent()) {
+            Commande existingCommande = optionalCommande.get();
+            optionalFacture.ifPresent(existingCommande::setFactureBidirection);
+
+            existingCommande.setOrderTime(newCommande.getOrderTime());
+            existingCommande.getOrderItems().clear();
+            existingCommande.setOrderTime(newCommande.getOrderTime());
+
+            for(CommandeItem item : newCommande.getOrderItems()) {
+                existingCommande.addItem(item);
+            }
+            return commandeRepository.save(existingCommande);
+        } else {
+            throw new RuntimeException("Commande id " + id + " introuvable");
+        }
+
+    }
+
+
+    @Override
+    public Commande updateCommandeById2(Integer id, Commande newCommande) throws IllegalArgumentException {
+        // Check if newCommande or its fields are null or empty
+        if(newCommande == null || newCommande.getOrderTime() == null || newCommande.getOrderItems() == null) {
+            throw new IllegalArgumentException("Invalid Commande");
+        }
+
+        // Check each item in the OrderItems list
+        for(CommandeItem item : newCommande.getOrderItems()) {
+            if(item == null || item.getMenuItem() == null || item.getQuantity() == 0) {
+                throw new IllegalArgumentException("Invalid CommandeItem in Commande");
+            }
+        }
+
         Optional<Commande> optionalCommande = commandeRepository.findById(id);
         Optional<Facture> optionalFacture = factureRepository.findFactureByCommande_Id(id);
 
@@ -121,6 +158,8 @@ public class CommandeServiceImpl implements CommandeService {
         }
 
     }
+
+
 
     /**
      * Fonction utilitaire pour vérifier si un élément de Commande existe dans une Commande donnée.

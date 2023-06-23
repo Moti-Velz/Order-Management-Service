@@ -22,6 +22,7 @@ public class CommandeItem {
     private int id;
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
     @JoinColumn(name="commande_id_FK") //On specifie le nom de la colonne
+    @JsonBackReference
     private Commande commande;
     @ManyToOne
     private MenuItem menuItem;

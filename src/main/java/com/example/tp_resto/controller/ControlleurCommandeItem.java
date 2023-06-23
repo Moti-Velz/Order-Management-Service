@@ -6,8 +6,10 @@ import com.example.tp_resto.entity.CommandeItem;
 import com.example.tp_resto.service.CommandeItemService;
 import com.example.tp_resto.service.CommandeService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -67,6 +69,7 @@ public class ControlleurCommandeItem {
     @PutMapping("/update/{commandeItemId}")
     public CommandeItem updateCommandeItem(@PathVariable int commandeItemId,
                                            @RequestBody CommandeItem commandeItemDetails) {
+
         CommandeItem commandeItem = commandeItemService.findCommandeItemById(commandeItemId).orElseThrow(() -> new RuntimeException
                 ("CommandeItem No" + commandeItemId + " Introuvable"));
 
@@ -74,6 +77,32 @@ public class ControlleurCommandeItem {
         commandeItem.setMenuItem(commandeItemDetails.getMenuItem());
         return commandeItemService.saveCommandeItem(commandeItem);
     }
+
+    @PutMapping("/update2/{commandeItemId}")
+    public ResponseEntity<?> updateCommandeItem2(@PathVariable int commandeItemId,
+                                                @RequestBody CommandeItem commandeItemDetails) {
+        if (commandeItemDetails == null || commandeItemDetails.getQuantity() == 0
+                || commandeItemDetails.getMenuItem() == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Veuillez fournir les parametres pour l'update");
+        }
+
+        CommandeItem commandeItem = commandeItemService.findCommandeItemById(commandeItemId)
+                .orElseThrow(() -> new RuntimeException
+                        ("CommandeItem No" + commandeItemId + " Introuvable"));
+
+        commandeItem.setQuantity(commandeItemDetails.getQuantity());
+        commandeItem.setMenuItem(commandeItemDetails.getMenuItem());
+
+        CommandeItem updatedCommandeItem = commandeItemService.saveCommandeItem(commandeItem);
+
+        if (updatedCommandeItem != null) {
+            return ResponseEntity.status(HttpStatus.CREATED).body(updatedCommandeItem);
+        } else {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Update CommandeItem impossible");
+        }
+    }
+
+
 
     /**
      * Supprime un élément de commande.
