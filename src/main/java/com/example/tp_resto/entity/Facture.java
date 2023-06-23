@@ -1,5 +1,6 @@
 package com.example.tp_resto.entity;
 
+import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
@@ -50,16 +51,24 @@ public class Facture {
     /**
      * Constructeur de la classe Facture avec les paramètres spécifiés.
      *
-     * @param id       L'ID de la facture.
      * @param commande La commande associée à la facture.
      * @param status   Le statut de la facture.
      * @param billTime Le temps de facturation.
      */
-    public Facture(int id, Commande commande, boolean status, LocalDateTime billTime) {
-        this.id = id;
+    public Facture(Commande commande, boolean status, LocalDateTime billTime) {
         this.commande = commande;
         this.status = status;
         this.billTime = billTime;
+        calculatePrixTotal();
+    }
+
+    @JsonGetter("prixTotal")
+    private String calculatePrixTotal() {
+        double total = 0;
+        for(CommandeItem item : this.commande.getOrderItems()) {
+            total += item.getQuantity() * item.getMenuItem().getPrice();
+        }
+        return String.format("%.2f", total);
     }
 
     public int getId() {
@@ -112,20 +121,6 @@ public class Facture {
      */
     public void setBillTime(LocalDateTime billTime) {
         this.billTime = billTime != null ? billTime.truncatedTo(ChronoUnit.SECONDS) : null;
-    }
-
-    /**
-     * Calcule le prix total de la facture en additionnant les prix des éléments de commande associés.
-     *
-     * @return Le prix total de la facture.
-     */
-    public double getPrixTotal(){
-        double total = 0;
-        Commande commande = this.getCommande();
-        for(CommandeItem food : commande.getOrderItems()){
-            total += food.getMenuItem().getPrice();
-        }
-        return total;
     }
 
     @Override
