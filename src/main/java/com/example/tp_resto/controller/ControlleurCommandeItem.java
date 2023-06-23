@@ -67,12 +67,12 @@ public class ControlleurCommandeItem {
     @PutMapping("/update/{commandeItemId}")
     public CommandeItem updateCommandeItem(@PathVariable int commandeItemId,
                                            @RequestBody CommandeItem commandeItemDetails) {
-        CommandeItem commandeItem = commandeItemService.findById(commandeItemId).orElseThrow(() -> new RuntimeException
+        CommandeItem commandeItem = commandeItemService.findCommandeItemById(commandeItemId).orElseThrow(() -> new RuntimeException
                 ("CommandeItem No" + commandeItemId + " Introuvable"));
 
         commandeItem.setQuantity(commandeItemDetails.getQuantity());
         commandeItem.setMenuItem(commandeItemDetails.getMenuItem());
-        return commandeItemService.save(commandeItem);
+        return commandeItemService.saveCommandeItem(commandeItem);
     }
 
     /**
@@ -83,7 +83,7 @@ public class ControlleurCommandeItem {
      */
     @DeleteMapping("/del/{commandeItemId}")
     public ResponseEntity<?> deleteCommandeItem(@PathVariable(value = "commandeItemId") int commandeItemId) {
-        CommandeItem commandeItem = commandeItemService.findById(commandeItemId).orElseThrow(() -> new RuntimeException
+        CommandeItem commandeItem = commandeItemService.findCommandeItemById(commandeItemId).orElseThrow(() -> new RuntimeException
                 ("CommandeItem No" + commandeItemId + " Introuvable"));
 
         commandeItemService.deleteItemFromOrderItems(commandeItem);

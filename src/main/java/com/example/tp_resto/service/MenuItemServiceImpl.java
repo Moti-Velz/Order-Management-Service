@@ -11,6 +11,10 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Implémentation du service pour les objets MenuItem.
+ * Cette classe fournit les services CRUD pour les objets MenuItem.
+ */
 @Service
 public class MenuItemServiceImpl implements MenuItemService{
 
@@ -18,12 +22,24 @@ public class MenuItemServiceImpl implements MenuItemService{
     ICommandeItemRepo commandeItemRepo;
 
 
+    /**
+     * Constructeur de la classe MenuItemServiceImpl.
+     *
+     * @param menuRepository le dépôt pour les objets MenuItem.
+     * @param commandeItemRepo le dépôt pour les objets CommandeItem.
+     */
     @Autowired
     MenuItemServiceImpl(IMenuItem menuRepository, ICommandeItemRepo commandeItemRepo) {
         this.commandeItemRepo = commandeItemRepo;
         this.menuRepository=menuRepository;
     }
 
+    /**
+     * Récupère un MenuItem par son ID.
+     *
+     * @param id l'ID du MenuItem à récupérer.
+     * @return le MenuItem correspondant à l'ID donné.
+     */
     @Override
     public MenuItem getById(int id) {
         Optional<MenuItem> itemOpt = menuRepository.findById(id);
@@ -36,17 +52,33 @@ public class MenuItemServiceImpl implements MenuItemService{
         return item;
     }
 
+    /**
+     * Récupère un MenuItem par son nom.
+     *
+     * @param name le nom du MenuItem à récupérer.
+     * @return le MenuItem correspondant au nom donné.
+     */
     @Override
     public MenuItem getByName(String name) {
         return menuRepository.findByNameIgnoreCase(name);
     }
 
-
+    /**
+     * Récupère tous les MenuItem.
+     *
+     * @return une liste contenant tous les MenuItem.
+     */
     @Override
     public List<MenuItem> findAll() {
         return menuRepository.findAll();
     }
 
+    /**
+     * Enregistre un nouveau MenuItem.
+     *
+     * @param menuItem le MenuItem à enregistrer.
+     * @return le MenuItem enregistré.
+     */
     @Override
     public MenuItem save(MenuItem menuItem) {
         Optional<MenuItem> optionalMenuItem = menuRepository.findMenuItemByName(menuItem.getName());
@@ -58,6 +90,13 @@ public class MenuItemServiceImpl implements MenuItemService{
             return menuRepository.save(menuItem);
         }
     }
+    /**
+     * Met à jour un MenuItem par son ID.
+     *
+     * @param id l'ID du MenuItem à mettre à jour.
+     * @param menuItem le MenuItem mis à jour.
+     * @return le MenuItem mis à jour.
+     */
 
     @Override
     public MenuItem updateMenuItemById(int id, MenuItem menuItem) {
@@ -80,6 +119,13 @@ public class MenuItemServiceImpl implements MenuItemService{
         } else
             throw new MenuItemNotFoundException("MenuItem Not Found");
     }
+
+    /**
+     * Supprime un MenuItem par son ID.
+     *
+     * @param id l'ID du MenuItem à supprimer.
+     * @return true si le MenuItem a été supprimé, sinon false.
+     */
 
     @Override
     public boolean deleteMenuItemById(int id) {

@@ -12,17 +12,41 @@ import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Cette classe est utilisée pour initialiser la base de données au démarrage de l'application.
+ * Elle remplit la base de données avec des objets Commande, MenuItem et Facture préconfigurés.
+ *
+ */
 @Component
 public class ConfigStart implements CommandLineRunner {
 
+    /**
+     * Service pour gérer les objets Commande.
+     */
     private final CommandeService commandeService;
+    /**
+     * Service pour gérer les objets MenuItem.
+     */
     private final MenuItemService menuItemService;
 
+    /**
+     * Constructeur avec des arguments pour initialiser les services commandeService et menuItemService.
+     *
+     * @param commandeService Service pour gérer les objets Commande.
+     * @param menuItemService Service pour gérer les objets MenuItem.
+     */
     public ConfigStart(CommandeService commandeService, MenuItemService menuItemService) {
         this.commandeService = commandeService;
         this.menuItemService = menuItemService;
     }
 
+    /**
+     * Cette méthode est exécutée au démarrage de l'application.
+     * Elle vérifie si la base de données est vide, et si c'est le cas, elle la remplit.
+     *
+     * @param args Arguments de la ligne de commande.
+     * @throws Exception Si une erreur se produit lors de l'exécution.
+     */
     @Override
     public void run(String... args) throws Exception {
 
@@ -33,8 +57,18 @@ public class ConfigStart implements CommandLineRunner {
 
     }
 
+    /**
+     * Cette méthode remplit la base de données avec des données d'exemple.
+     *
+     * @param commandeService Service pour gérer les objets Commande.
+     * @param menuItemService Service pour gérer les objets MenuItem.
+     */
     private void remplirBD(CommandeService commandeService, MenuItemService menuItemService) {
 
+
+        /**
+         * Construction de nos menuItem avec leur caracteristique
+         */
         MenuItem foodItem =  new MenuItem("Steak", "RibEye", 32.99);
         MenuItem foodItem2 = new MenuItem("Poulet", "Poulet rôti avec des herbes provençales", 28.99);
         MenuItem foodItem3 = new MenuItem("Canard", "Canard à l'orange", 38.99);
@@ -46,6 +80,9 @@ public class ConfigStart implements CommandLineRunner {
         MenuItem foodItem9 = new MenuItem("Fromage", "Assortiment de fromages français", 20.99);
         MenuItem foodItem10 = new MenuItem("Soupe", "Bouillabaisse de Marseille", 25.99);
 
+        /**
+         * on ajoute a notre BD les MenuItems
+         */
         this.menuItemService.save(foodItem);
         this.menuItemService.save(foodItem2);
         this.menuItemService.save(foodItem3);

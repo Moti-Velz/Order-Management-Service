@@ -11,7 +11,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 
-import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -183,12 +182,12 @@ public class CommandeServiceImplTest {
         existingCommandeItem.setId(1);
         existingCommandeItem.setQuantity(2);
 
-        when(commandeItemService.findById(anyInt())).thenReturn(Optional.of(existingCommandeItem));
+        when(commandeItemService.findCommandeItemById(anyInt())).thenReturn(Optional.of(existingCommandeItem));
 
         commande.addItem(commandeItem);
 
         assertEquals(3, existingCommandeItem.getQuantity());
-        verify(commandeItemService, times(1)).save(existingCommandeItem);
+        verify(commandeItemService, times(1)).saveCommandeItem(existingCommandeItem);
     }
 
     @Test
@@ -200,10 +199,10 @@ public class CommandeServiceImplTest {
         commandeItem.setMenuItem(menuItem);
         commandeItem.setId(0);
 
-        when(commandeItemService.findById(anyInt())).thenReturn(Optional.empty());
+        when(commandeItemService.findCommandeItemById(anyInt())).thenReturn(Optional.empty());
 
         commande.addItem(commandeItem);
 
-        verify(commandeItemService, times(1)).save(commandeItem);
+        verify(commandeItemService, times(1)).saveCommandeItem(commandeItem);
     }
 }

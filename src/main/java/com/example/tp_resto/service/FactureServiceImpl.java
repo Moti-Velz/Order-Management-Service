@@ -13,19 +13,34 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Implémentation du service de Facture.
+ * Cette classe fournit les méthodes CRUD pour les objets Facture.
+ */
 @Service
 public class FactureServiceImpl implements FactureService {
 
     private final IFactureRepo factureRepo;
     private final ICommandeRepo commandeRepository;
 
+    /**
+     * Constructeur de la classe FactureServiceImpl.
+     *
+     * @param factureRepo le dépôt pour les objets Facture.
+     * @param commandeRepository le dépôt pour les objets Commande.
+     */
     @Autowired
     public FactureServiceImpl(IFactureRepo factureRepo, ICommandeRepo commandeRepository) {
         this.factureRepo = factureRepo;
         this.commandeRepository = commandeRepository;
     }
 
-    //Create
+    /**
+     * Enregistre une nouvelle Facture.
+     *
+     * @param facture la Facture à enregistrer.
+     * @return la Facture enregistrée.
+     */
     @Override
     public Facture saveFacture(Facture facture) {
         // Check if a Facture with the same commandeId already exists
@@ -36,6 +51,12 @@ public class FactureServiceImpl implements FactureService {
         return factureRepo.save(facture);
     }
 
+    /**
+     * Crée une Facture pour une Commande donnée.
+     *
+     * @param commande la Commande pour laquelle créer une Facture.
+     * @return la nouvelle Facture créée.
+     */
     public Facture createFacture(Commande commande) {
         // Votre logique de création de facture ici
         // Vous pouvez utiliser le FactureRepository pour enregistrer la facture en base de données
@@ -46,7 +67,12 @@ public class FactureServiceImpl implements FactureService {
         return factureRepo.save(facture);
     }
 
-    //Read
+    /**
+     * Récupère une Facture en fonction de son identifiant.
+     *
+     * @param id l'identifiant de la Facture à récupérer.
+     * @return la Facture correspondante à l'identifiant donné.
+     */
     @Transactional
     @Override
     public Facture findById(int id) {
@@ -54,7 +80,11 @@ public class FactureServiceImpl implements FactureService {
     }
 
 
-    //condition de doublons
+    /**
+     * Récupère toutes les Factures.
+     *
+     * @return une liste de toutes les Factures.
+     */
     @Override
     public List<Facture> findAll() {
 
@@ -64,7 +94,12 @@ public class FactureServiceImpl implements FactureService {
         } else return maListe;
     }
 
-
+    /**
+     * Récupère une liste de Factures en fonction de leur date.
+     *
+     * @param date la date des Factures à récupérer.
+     * @return une liste de Factures correspondant à la date donnée.
+     */
     @Override
     public List<Facture> findByDate(LocalDateTime date) {
 
@@ -72,12 +107,11 @@ public class FactureServiceImpl implements FactureService {
     }
 
     /**
-     * ici on veut verifier qu'on ne lie pas plus d'une facture a la meme commande
-     On ne peut pas modifier la commande assignée à une facture
+     * Met à jour une Facture en fonction de son id.
      *
-     * @param id
-     * @param facture
-     * @return
+     * @param id de la Facture à mettre à jour.
+     * @param facture la nouvelle Facture à enregistrer.
+     * @return la Facture mise à jour.
      */
     @Override
     public Facture updateFacture(int id, Facture facture) {
@@ -98,7 +132,12 @@ public class FactureServiceImpl implements FactureService {
             }
     }
 
-    //condition de doublons
+    /**
+     * Supprime une Facture en fonction de son id.
+     *
+     * @param id de la Facture à supprimer.
+     * @return true si la suppression a été effectuée avec succès, sinon false.
+     */
     @Transactional
     @Override
     public boolean deleteFactureById(int id) {
@@ -120,6 +159,12 @@ public class FactureServiceImpl implements FactureService {
         }
     }
 
+    /**
+     * Crée une nouvelle Facture pour une Commande existante en fonction de son id.
+     *
+     * @param id de la Commande pour laquelle créer une nouvelle Facture.
+     * @return la nouvelle Facture créée pour la Commande existante.
+     */
     @Override
     public Facture createFactureExistingCommande(int id) {
         Optional<Commande> commandeOpt = commandeRepository.findById(id);

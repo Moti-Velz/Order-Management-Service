@@ -3,7 +3,6 @@ package com.example.tp_resto.service;
 import com.example.tp_resto.entity.Commande;
 import com.example.tp_resto.entity.CommandeItem;
 import com.example.tp_resto.repository.ICommandeItemRepo;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -55,7 +54,7 @@ class CommandeItemServiceImplTest {
     @Test
     void findByIdSuccess() {
         when(commandeItemRepository.findById(1)).thenReturn(Optional.of(commandeItem1));
-        Optional<CommandeItem> result = commandeItemService.findById(1);
+        Optional<CommandeItem> result = commandeItemService.findCommandeItemById(1);
         assertTrue(result.isPresent());
         assertEquals(commandeItem1, result.get());
         verify(commandeItemRepository, times(1)).findById(anyInt());
@@ -64,14 +63,14 @@ class CommandeItemServiceImplTest {
     @Test
     void findByIdNotFound() {
         when(commandeItemRepository.findById(anyInt())).thenReturn(Optional.empty());
-       assertThrows(RuntimeException.class,()-> commandeItemService.findById(100));
+       assertThrows(RuntimeException.class,()-> commandeItemService.findCommandeItemById(100));
         verify(commandeItemRepository, times(1)).findById(anyInt());
     }
 
     @Test
     void save() {
         when(commandeItemRepository.save(any(CommandeItem.class))).thenReturn(commandeItem1);
-        CommandeItem result = commandeItemService.save(new CommandeItem());
+        CommandeItem result = commandeItemService.saveCommandeItem(new CommandeItem());
         assertNotNull(result);
         assertEquals(commandeItem1, result);
         verify(commandeItemRepository, times(1)).save(any(CommandeItem.class));
@@ -80,14 +79,14 @@ class CommandeItemServiceImplTest {
     @Test
     void deleteById() {
         doNothing().when(commandeItemRepository).deleteById(1);
-        commandeItemService.deleteById(1);
+        commandeItemService.deleteCommandeItemById(1);
         verify(commandeItemRepository, times(1)).deleteById(anyInt());
     }
 
     @Test
     void deleteByIdWithInvalidId() {
         doThrow(new IllegalArgumentException()).when(commandeItemRepository).deleteById(anyInt());
-        assertThrows(IllegalArgumentException.class, () -> commandeItemService.deleteById(100));
+        assertThrows(IllegalArgumentException.class, () -> commandeItemService.deleteCommandeItemById(100));
         verify(commandeItemRepository, times(1)).deleteById(anyInt());
     }
     @Test

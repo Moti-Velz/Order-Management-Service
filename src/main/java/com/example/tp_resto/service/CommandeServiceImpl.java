@@ -12,26 +12,47 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Implémentation du service Commande.
+ * Cette classe offre les services CRUD pour les objets Commande.
+ */
 @Service
 public class CommandeServiceImpl implements CommandeService {
 
     private ICommandeRepo commandeRepository;
-    //private CommandeItemService commandeItemService;
+
     private IFactureRepo factureRepository;
 
+    /**
+     * Constructeur de la classe CommandeServiceImpl.
+     *
+     * @param commandeRepository le dépôt pour les objets Commande.
+     * @param factureRepository le dépôt pour les objets Facture.
+     */
     @Autowired
-    public CommandeServiceImpl(ICommandeRepo commandeRepository, IFactureRepo factureRepository) { //CommandeItemService commandeItemService,
+    public CommandeServiceImpl(ICommandeRepo commandeRepository, IFactureRepo factureRepository) {
         this.commandeRepository = commandeRepository;
-        //this.commandeItemService = commandeItemService;
+
         this.factureRepository = factureRepository;
     }
 
+    /**
+     * Enregistre une nouvelle Commande.
+     *
+     * @param order la Commande à enregistrer.
+     * @return la Commande enregistrée.
+     */
     @Override
     public Commande saveCommande(Commande order) {
         return commandeRepository.save(order);
     }
 
-    //done pour linstant
+    /**
+     * Récupère une Commande en fonction de son id.
+     *
+     * @param id de la Commande à récupérer.
+     * @return un Optional contenant la Commande si elle est trouvée, sinon un Optional vide.
+     */
     @Override
     public Optional<Commande> getById(int id) {
         Optional<Commande> commandeOptional = commandeRepository.findById(id);
@@ -40,13 +61,25 @@ public class CommandeServiceImpl implements CommandeService {
         }
         return commandeOptional;
     }
+
+    /**
+     * Récupère toutes les Commandes.
+     *
+     * @return une liste de toutes les Commandes.
+     */
     @Override
     public List<Commande> getAll() {
         return commandeRepository.findAll();
     }
 
 
-
+    /**
+     * Met à jour une Commande en fonction de son id.
+     *
+     * @param id de la Commande à mettre à jour.
+     * @param newCommande la nouvelle Commande à enregistrer.
+     * @return la Commande mise à jour.
+     */
     @Transactional
     @Override
     public Commande updateCommandeById(Integer id, Commande newCommande) {
@@ -70,6 +103,12 @@ public class CommandeServiceImpl implements CommandeService {
         }
     }
 
+    /**
+     * Supprime une Commande en fonction de son id.
+     *
+     * @param id de la Commande à supprimer.
+     * @return true si la suppression a été effectuée avec succès, sinon false.
+     */
     @Override
     public boolean deleteCommandeById(Integer id) {
         Optional<Commande> commande = commandeRepository.findById(id);
@@ -83,7 +122,13 @@ public class CommandeServiceImpl implements CommandeService {
 
     }
 
-    //Helper Function
+    /**
+     * Fonction utilitaire pour vérifier si un élément de Commande existe dans une Commande donnée.
+     *
+     * @param commandeItem l'élément de la Commande à vérifier.
+     * @param commande la Commande dans laquelle vérifier.
+     * @return l'ID de l'élément de la Commande s'il existe dans la Commande, sinon 0.
+     */
     public int checkCommandeItem(CommandeItem commandeItem, Commande commande){
         for(CommandeItem commandeItem1 : commande.getOrderItems()) {
             if(commandeItem1.getMenuItem().getId() == commandeItem.getMenuItem().getId()){
@@ -91,10 +136,6 @@ public class CommandeServiceImpl implements CommandeService {
             }
         } return 0;
     }
-
-//    public Commande updateCommandeItemsByCommandeId(int i, List<CommandeItem> newOrderItems) {
-//        return null;
-//    }
 }
 
 
