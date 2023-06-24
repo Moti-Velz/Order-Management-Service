@@ -68,7 +68,8 @@ public class ControlleurCommande {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Commande No " + id + " Introuvable");
             }
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Il y a une erreur avec votre Requête, nous ne pouvons poursuivre votre demande.");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Il y a une erreur avec votre Requête, nous ne " +
+                    "pouvons poursuivre votre demande.");
         }
     }
 
@@ -133,8 +134,10 @@ public class ControlleurCommande {
     @PutMapping("/commandes/update/{id}")
     public ResponseEntity<?> updateCommandeById(@PathVariable int id, @RequestBody Commande updatedCommande) {
         try {
-            if(updatedCommande == null || updatedCommande.getOrderTime() == null || updatedCommande.getOrderItems().isEmpty()) {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Tous les champs sont obligatoires pour poursuivre a la modification");
+            if(updatedCommande == null || updatedCommande.getOrderTime() == null || updatedCommande.getOrderItems()
+                    .isEmpty()) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Tous les champs sont obligatoires pour " +
+                        "poursuivre a la modification");
             }else {
                 Commande commande = commandeService.updateCommandeById2(id, updatedCommande);
                 return ResponseEntity.ok(commande);
@@ -144,7 +147,8 @@ public class ControlleurCommande {
         } catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Commande non trouvée, impossible de la modifier.");
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Une erreur est subvenue, la Commande ne sera pas Modifiée.");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Une erreur est subvenue, la Commande ne sera pas " +
+                    "Modifiée.");
         }
         }
 

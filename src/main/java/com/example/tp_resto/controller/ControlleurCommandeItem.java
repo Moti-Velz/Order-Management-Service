@@ -70,8 +70,8 @@ public class ControlleurCommandeItem {
     public CommandeItem updateCommandeItem(@PathVariable int commandeItemId,
                                            @RequestBody CommandeItem commandeItemDetails) {
 
-        CommandeItem commandeItem = commandeItemService.findCommandeItemById(commandeItemId).orElseThrow(() -> new RuntimeException
-                ("CommandeItem No" + commandeItemId + " Introuvable"));
+        CommandeItem commandeItem = commandeItemService.findCommandeItemById(commandeItemId).orElseThrow
+                (() -> new RuntimeException("CommandeItem No" + commandeItemId + " Introuvable"));
 
         commandeItem.setQuantity(commandeItemDetails.getQuantity());
         commandeItem.setMenuItem(commandeItemDetails.getMenuItem());

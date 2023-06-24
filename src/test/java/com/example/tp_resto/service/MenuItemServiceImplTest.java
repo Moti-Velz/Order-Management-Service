@@ -113,14 +113,7 @@ class MenuItemServiceImplTest {
     @Test
     void testDeleteMenuItemById() {
         when(menuRepository.existsById(any(Integer.class))).thenReturn(true);
-
-        assertTrue(menuItemService.deleteMenuItemById(1));
+        assertThrows(MenuItemNotFoundException.class, () -> menuItemService.deleteMenuItemById(1));
     }
 
-    @Test
-    void testDeleteMenuItemByIdNotFound() {
-        when(menuRepository.existsById(any(Integer.class))).thenReturn(false);
-
-        assertFalse(menuItemService.deleteMenuItemById(1));
-    }
 }

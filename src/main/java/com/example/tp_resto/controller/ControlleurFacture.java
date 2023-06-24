@@ -69,7 +69,8 @@ public class ControlleurFacture {
             return  ResponseEntity.ok("Facture No " + facture.getId() + " a bien été enregistrée dans la " +
                     "commande No " + id);
         } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Veuillez vérifier qu'aucune facture est associée " +
+                    "à cette commande.");
         }
     }
 

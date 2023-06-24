@@ -31,7 +31,7 @@ public class Commande {
             fetch = FetchType.EAGER)
     //@JsonBackReference
     //@JoinColumn(name = "commande_id") quand on utilise mappedBy, on ne met pas cette annotation
-    private List<CommandeItem> orderItems = new ArrayList<>();
+    private List<CommandeItem> orderItems;
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "facture_id")
     private Facture facture;
@@ -144,6 +144,9 @@ public class Commande {
     }
 
     public List<CommandeItem> getOrderItems() {
+        if(orderItems == null) {
+            orderItems = new ArrayList<>();
+        }
         return orderItems;
     }
 
