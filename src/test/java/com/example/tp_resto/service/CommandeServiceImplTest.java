@@ -4,6 +4,7 @@ import com.example.tp_resto.entity.Commande;
 import com.example.tp_resto.entity.CommandeItem;
 import com.example.tp_resto.entity.MenuItem;
 import com.example.tp_resto.repository.ICommandeRepo;
+import com.example.tp_resto.repository.IFactureRepo;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -25,7 +26,8 @@ public class CommandeServiceImplTest {
     private CommandeItemServiceImpl commandeItemService;
     @Mock
     private ICommandeRepo commandeRepo;
-
+    @Mock
+    private IFactureRepo factureRepo;
     @InjectMocks
     private CommandeServiceImpl commandeService;
 
@@ -36,6 +38,8 @@ public class CommandeServiceImplTest {
 
     @BeforeEach
     public void setUp() throws Exception {
+        when(factureRepo.findFactureByCommande_Id(anyInt())).thenReturn(Optional.empty());
+
     }
 
     @Test
@@ -94,7 +98,7 @@ public class CommandeServiceImplTest {
         when(commandeRepo.findById(any(Integer.class))).thenReturn(Optional.of(existingCommande));
         when(commandeRepo.save(any(Commande.class))).thenReturn(newCommande);
 
-        Commande updatedCommande = commandeService.updateCommandeById(1, newCommande);
+        Commande updatedCommande = commandeService.updateCommandeById2(1, newCommande);
 
         assertEquals(newCommande.getOrderTime(), updatedCommande.getOrderTime());
     }
@@ -106,7 +110,7 @@ public class CommandeServiceImplTest {
         when(commandeRepo.findById(any(Integer.class))).thenReturn(Optional.empty());
 
         Exception exception = assertThrows(RuntimeException.class, () -> {
-            commandeService.updateCommandeById(1, newCommande);
+            commandeService.updateCommandeById2(1, newCommande);
         });
 
         String expectedMessage = "Commande id 1 introuvable";
