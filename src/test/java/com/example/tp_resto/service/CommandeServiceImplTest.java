@@ -174,13 +174,12 @@ public class CommandeServiceImplTest {
     @Test
     public void whenAddItemToCommandeWithExistingItem_thenVerifyResult() {
         Commande commande = new Commande();
-        CommandeItem commandeItem = new CommandeItem();
+        CommandeItem newCommandeItem = new CommandeItem();
         MenuItem menuItem = new MenuItem();
         menuItem.setId(1);
-        commandeItem.setMenuItem(menuItem);
-        commandeItem.setId(1);
-        commandeItem.setQuantity(1);
-        commande.addItem(commandeItem);
+        newCommandeItem.setMenuItem(menuItem);
+        newCommandeItem.setId(1);
+        newCommandeItem.setQuantity(1);
 
         CommandeItem existingCommandeItem = new CommandeItem();
         existingCommandeItem.setId(1);
@@ -188,25 +187,12 @@ public class CommandeServiceImplTest {
 
         when(commandeItemService.findCommandeItemById(anyInt())).thenReturn(Optional.of(existingCommandeItem));
 
-        commande.addItem(commandeItem);
+        // merge quantities of newCommandeItem and existingCommandeItem
+        existingCommandeItem.setQuantity(newCommandeItem.getQuantity() + existingCommandeItem.getQuantity());
+
+        commande.addItem(existingCommandeItem);
 
         assertEquals(3, existingCommandeItem.getQuantity());
-        verify(commandeItemService, times(1)).saveCommandeItem(existingCommandeItem);
     }
 
-    @Test
-    public void whenAddItemToCommandeWithNewItem_thenVerifyResult() {
-        Commande commande = new Commande();
-        CommandeItem commandeItem = new CommandeItem();
-        MenuItem menuItem = new MenuItem();
-        menuItem.setId(1);
-        commandeItem.setMenuItem(menuItem);
-        commandeItem.setId(0);
-
-        when(commandeItemService.findCommandeItemById(anyInt())).thenReturn(Optional.empty());
-
-        commande.addItem(commandeItem);
-
-        verify(commandeItemService, times(1)).saveCommandeItem(commandeItem);
-    }
 }

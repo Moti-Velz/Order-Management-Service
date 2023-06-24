@@ -106,7 +106,7 @@ public class ControlleurCommande {
      * @return La nouvelle commande créée avec les éléments ajoutés, ou une exception en cas d'erreur.
      */
     @PostMapping("/commandes/add")
-    public Optional<Commande> createCommandeWithItems(@RequestBody List<CommandeItem> listeCommandeItem) {
+    public Commande createCommandeWithItems(@RequestBody List<CommandeItem> listeCommandeItem) {
 
         try {
 
@@ -117,7 +117,7 @@ public class ControlleurCommande {
         }
         Commande savedCommande = commandeService.saveCommande(commande);
 
-        return commandeService.getById(savedCommande.getId());
+        return commandeService.getById(savedCommande.getId()).get();
         } catch ( Exception ex) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Un problème est survenu lors de la création " +
                     "de la commande");
