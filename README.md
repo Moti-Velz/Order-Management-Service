@@ -1,6 +1,6 @@
 # API Rest avec Spring Boot
 ## Description du Projet
-"API Rest avec Spring Boot" est un projet qui expose un service REST complet pour gérer un système de commandes de restaurant. Le service propose plus de 20 'endpoints' qui permettent de manipuler divers aspects du système de commandes. Ce projet a été réalisé en utilisant Hibernate, Spring Boot, et MySQL et vise à respecter les standards de qualité logicielle grâce à l'intégration des cadriciels de tests JUnit et Mockito.
+Service-Commande est un projet qui expose un service REST complet pour gérer un système de commandes de restaurant. Le service propose plus de 20 'endpoints' qui permettent de manipuler divers aspects du système de commandes. Ce projet a été réalisé en utilisant Hibernate, Spring Boot, et MySQL et vise à respecter les standards de qualité logicielle grâce à l'intégration des cadriciels de tests JUnit et Mockito.
 
 ## Fonctionnalités
 - Service REST Complet: Plus de 20 'endpoints' pour manipuler un système de commandes de restaurant.
